@@ -1,0 +1,104 @@
+%default language is German. use the second line instead for english settings:
+\RequirePackage{ifpdf}
+\documentclass{lni}
+%\documentclass[english]{lni}
+
+\IfFileExists{latin1.sty}{\usepackage{latin1}}{\usepackage{isolatin1}}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+
+\usepackage{latexsym}
+
+\author{
+	Theodor Teslia \\ 
+	\\ 
+	Informatik 11 -- Embedded Software \\ 
+	RWTH Aachen University \\ 
+	Aachen, Germany \\ 
+	teslia@embedded.rwth-aachen.de\\
+	\\
+	\textit{Betreuer}\\
+	\textit{Robin Mross}\\ %Dies ist der inhaltliche Betreuer. Wer das ist, erfahren Sie noch.
+}
+\title{\small{Proseminar} \\ \vspace{0.5cm} \Large{Eine Logik für das Schlussfolgern über Zeit und Zuverlässigkeit}}
+
+\newcommand{\CTL}{\mathsf{CTL}}
+\newcommand{\PCTL}{\mathsf{PCTL}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Eine prägnante Zusammenfassung des Kerninhaltes ohne thematische Einleitung und Fazit. 
+\end{abstract}
+
+\section{Einführung}
+
+Hier führe ich in die Logik $\PCTL$ ein, die Probleme die diese löst und wie dies circa gemacht wird.
+Falls es funktioniert, führe ich außerdem in Halbringsemantik ein und erkläre kurz, in welchem Punkt sich die Ansätze ähneln und unterscheiden.
+
+\section{Grundlagen}
+
+\emph{Noch keine Rückmeldung von Robin.} Hier wird kurz die Syntax von $\CTL$ eingeführt und die Semantik, sowie Modellbeziehung erklärt.
+
+\section{Eine Logik für Zeit und Zuverlässigkeit}
+
+Dieses Kapitel stellt das Hauptkapitel der Arbeit dar und soll die Syntax und Semantik von $\PCTL$ erläutern, sowie mithilfe von eigenen Beispielen diese Verständlicher machen.
+
+\subsection{Syntax}
+
+Hier wird die Syntax von $\PCTL$ erläutert und einige Beispiele, die korrekt bzw. inkorrekt gebildete Formeln gebracht werden.
+
+\subsection{Semantik}
+
+Hier wird die Semantik erklärt und das verwendete Transitionssystem, die Markov Kette eingeführt. 
+Einige simple, abstrakte Beispiele ebenfalls zum Erklären verwendet werden.
+Ein Vergleich mit $\CTL$ soll passieren, wobei auf die in \emph{Paper} definierte Einbettung verwiesen, aber auch mein Fehler \emph{(falls meine Überlegungen korrekt sind)} gezeigt wird.
+
+\subsection{Model-Checking Algorithmen}
+
+Die im \emph{Paper} genannten Model-Checking Algorithmen werden erklärt und anhand von Tabellen und unterschiedlichen Formeln erläutert.
+Wie im \emph{Paper} soll eine Aufteilung in die unterschiedlichen Parameter-\textit{Arten} stattfinden.
+
+\subsection{Angewandtes Beispiel}
+
+Was genau als Beispiel verwendet wird, muss noch entschieden werden, im Zweifelsfall ein etwas anderes Übertragungsprotokoll als im Paper.
+Einige unterschiedliche Formeln sollen übersetzt werden so, dass auch die Bedeutung anderer Formeln als nur $\leadsto$ klarer wird.
+
+\section{Vergleich mit Halbringsemantik}
+
+\emph{Ob dieses Kapitel umgesetzt wird hängt von der Vergleichbarkeit von Halbringsemantik+CTL mit $\PCTL$ ab. Der Platz im restlichen Teil der Arbeit, der durch die Existenz des Kapitels wegfällt, soll von Kapitel \ref{ChapVerwandt} gepuffert werden. Bei Platzproblemen kann über das Zusammenlegen der Kapitel \ref{HalbringFO} und \ref{HalbringCTL} nachgedacht werden.} 
+Hier soll kurz erklärt werden, was genau Halbringsemantik ist und wofür sie im Allgemeinen verwendet wird.
+
+\subsection{Halbringsemantik zum Auswerten von Wahrscheinlichkeiten}
+\label{HalbringFO}
+
+Verwendung des Viterbi- bzw. \L ukasiewicz-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen.
+
+\subsection{Halbringsemantik für $\CTL$}
+\label{HalbringCTL}
+
+Erweiterung der Halbringsemantik für $\mathsf{FO}$ auf $\CTL$.
+
+\subsection{Vergleich von Halbringsemantik für $\CTL$ mit $\PCTL$}
+
+Unterschiede im Ansatz der beiden Varianten. Falls sich diese einfach beheben lassen, Vergleich in der Nutzung, der Ausdruckskraft etc.
+
+\section{Verwandte Arbeiten}
+\label{ChapVerwandt}
+
+Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ hinzufügen sollen hier erläutert werden.
+
+\subsection{Erweiterung von $\CTL$ durch Echtzeit}
+
+Ein weiterer Ansatz zum Ergänzen durch Zeit ist die Benutzung von reellen Werten, im Vergleich zu diskreten. \emph{Baier + Katoen und Paper}
+Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschränkung auf $t=\infty$ für $\PCTL$.
+
+\subsection{Erweiterung von $\CTL$ durch Wahrscheinlichkeiten}
+
+Es gibt auch Logiken die nur Wahrscheinlichkeiten hinzufügen. Lassen sich unterschiedliche Ansätze finden? Lösen diese andere Probleme \emph{Baier + Katoen und Paper}
+
+\bibliography{references}
+
+\end{document}
