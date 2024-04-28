@@ -40,11 +40,11 @@ Falls es funktioniert, führe ich außerdem in Halbringsemantik ein und erkläre
 
 \section{Grundlagen}
 
-\emph{Noch keine Rückmeldung von Robin.} Hier wird kurz die Syntax von $\CTL$ eingeführt und die Semantik, sowie Modellbeziehung erklärt.
+Hier wird kurz die Syntax von $\CTL$, dessen Semantik und die Definition Kripkestrukturen für $\CTL$ eingeführt. Ebenfalls soll kurz erläutert werden, was $\models$ bedeutet. Informationen ziehe ich primär aus \cite{baier2008principles}, da hier die Modellbeziehung und das Thema \textit{Model Checking} aus modernerer Sicht betrachtet wird, und \cite{clarke1981design}, da die in \cite{hansson1994logic} verwendete Notation eher der hier vorgestellten entspricht. Falls sich dies nicht unbedingt anbietet kann die zweite Quelle auch weggelassen werden.
 
 \section{Eine Logik für Zeit und Zuverlässigkeit}
 
-Dieses Kapitel stellt das Hauptkapitel der Arbeit dar und soll die Syntax und Semantik von $\PCTL$ erläutern, sowie mithilfe von eigenen Beispielen diese Verständlicher machen.
+Dieses Kapitel stellt das Hauptkapitel der Arbeit dar und soll die Syntax und Semantik von $\PCTL$ erläutern, sowie mithilfe von eigenen Beispielen diese Verständlicher machen. Offensichtliche verwende ich in dem gesamten Kapitel hauptsächlich \cite{hansson1994logic} für Informationen, Algorithmen und Beweise, die Beispiele werden aber zum Großteil eigene sein.
 
 \subsection{Syntax}
 
@@ -54,12 +54,12 @@ Hier wird die Syntax von $\PCTL$ erläutert und einige Beispiele, die korrekt bz
 
 Hier wird die Semantik erklärt und das verwendete Transitionssystem, die Markov Kette eingeführt. 
 Einige simple, abstrakte Beispiele ebenfalls zum Erklären verwendet werden.
-Ein Vergleich mit $\CTL$ soll passieren, wobei auf die in \emph{Paper} definierte Einbettung verwiesen, aber auch mein Fehler \emph{(falls meine Überlegungen korrekt sind)} gezeigt wird.
+Ein Vergleich mit $\CTL$ soll passieren, wobei auf die in \cite{hansson1994logic} definierte Einbettung verwiesen, aber auch mein Fehler \emph{(falls meine Überlegungen korrekt sind)} gezeigt wird.
 
 \subsection{Model-Checking Algorithmen}
 
-Die im \emph{Paper} genannten Model-Checking Algorithmen werden erklärt und anhand von Tabellen und unterschiedlichen Formeln erläutert.
-Wie im \emph{Paper} soll eine Aufteilung in die unterschiedlichen Parameter-\textit{Arten} stattfinden.
+Die in \cite{hansson1994logic} genannten Model-Checking Algorithmen werden erklärt und anhand von Tabellen und unterschiedlichen Formeln erläutert.
+Wie im Paper soll eine Aufteilung in die unterschiedlichen Parameter-\textit{Arten} (also $0<t<\infty$, $t=0$, $t=\infty$ und analog für $p$) stattfinden.
 
 \subsection{Angewandtes Beispiel}
 
@@ -68,18 +68,18 @@ Einige unterschiedliche Formeln sollen übersetzt werden so, dass auch die Bedeu
 
 \section{Vergleich mit Halbringsemantik}
 
-\emph{Ob dieses Kapitel umgesetzt wird hängt von der Vergleichbarkeit von Halbringsemantik+CTL mit $\PCTL$ ab. Der Platz im restlichen Teil der Arbeit, der durch die Existenz des Kapitels wegfällt, soll von Kapitel \ref{ChapVerwandt} gepuffert werden. Bei Platzproblemen kann über das Zusammenlegen der Kapitel \ref{HalbringFO} und \ref{HalbringCTL} nachgedacht werden.} 
-Hier soll kurz erklärt werden, was genau Halbringsemantik ist und wofür sie im Allgemeinen verwendet wird.
+\emph{Ob dieses Kapitel umgesetzt wird hängt von der Vergleichbarkeit von Viterbi-Halbring + $\CTL$ mit $\PCTL$ ab. Der Platz im restlichen Teil der Arbeit, der durch die Existenz des Kapitels wegfällt, soll von Kapitel \ref{ChapVerwandt} gepuffert werden. Bei Platzproblemen kann über das Zusammenlegen der Kapitel \ref{HalbringFO} und \ref{HalbringCTL} nachgedacht werden.}
+Hier soll kurz erklärt werden, was genau Halbringsemantik ist und wofür sie im Allgemeinen verwendet wird. In dieser Einleitung und Kapitel \ref{HalbringFO} wird vor allem auf \cite{gradel2017semiring} verwiesen.
 
 \subsection{Halbringsemantik zum Auswerten von Wahrscheinlichkeiten}
 \label{HalbringFO}
 
-Verwendung des Viterbi- bzw. \L ukasiewicz-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen.
+Verwendung des Viterbi-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen. Dieses Kapitel wird bei Platzproblemen weggelassen und der Übergang von $\mathsf{FO}$ auf $\mathsf{CTL}$ wird kurz in Kapitel \ref{HalbringCTL} passieren.
 
 \subsection{Halbringsemantik für $\CTL$}
 \label{HalbringCTL}
 
-Erweiterung der Halbringsemantik für $\mathsf{FO}$ auf $\CTL$.
+Erweiterung der Halbringsemantik für $\mathsf{FO}$ auf $\CTL$. Informationen sollen aus \cite{dannert2019generalized} und \cite{lluch2005quantitative} stammen.
 
 \subsection{Vergleich von Halbringsemantik für $\CTL$ mit $\PCTL$}
 
@@ -92,12 +92,12 @@ Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ hinzuf
 
 \subsection{Erweiterung von $\CTL$ durch Echtzeit}
 
-Ein weiterer Ansatz zum Ergänzen durch Zeit ist die Benutzung von reellen Werten, im Vergleich zu diskreten. \emph{Baier + Katoen und Paper}
-Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschränkung auf $t=\infty$ für $\PCTL$.
+Ein anderer Ansatz zum Ergänzen durch Zeit ist die in \cite{alur1990model} definierte Logik, welche erläutert werden soll. Interessant ist auch die Logik aus \cite{jahanian1986safety}, welche eine Fixpunkt-Logik, also ausdrucksstärker als $\CTL$ ist.
+Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschränkung von $p$ auf extreme Werte, also $p\in \{0,1\}$ für $\PCTL$.
 
 \subsection{Erweiterung von $\CTL$ durch Wahrscheinlichkeiten}
 
-Es gibt auch Logiken die nur Wahrscheinlichkeiten hinzufügen. Lassen sich unterschiedliche Ansätze finden? Lösen diese andere Probleme \emph{Baier + Katoen und Paper}
+Es gibt auch Logiken die nur Wahrscheinlichkeiten hinzufügen. Lassen sich unterschiedliche Ansätze finden? Lösen diese andere Probleme? Paper mit anderen probabilistischen Logiken (die $\CTL$ erweitern): \cite{hart1984probabilistic}, \cite{lehmann1982reasoning} und \cite{christoff1992reasoning}.
 
 \bibliography{references}
 
