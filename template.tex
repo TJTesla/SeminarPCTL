@@ -8,6 +8,8 @@
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 
+\usepackage{amsmath}
+
 \usepackage{latexsym}
 
 \author{
@@ -54,7 +56,7 @@ Hier wird die Syntax von $\PCTL$ erläutert und einige Beispiele, die korrekt bz
 
 Hier wird die Semantik erklärt und das verwendete Transitionssystem, die Markov Kette eingeführt. 
 Einige simple, abstrakte Beispiele ebenfalls zum Erklären verwendet werden.
-Ein Vergleich mit $\CTL$ soll passieren, wobei auf die in \cite{hansson1994logic} definierte Einbettung verwiesen, aber auch mein Fehler \emph{(falls meine Überlegungen korrekt sind)} gezeigt wird.
+Ein Vergleich mit $\CTL$ soll passieren, wobei auf die in \cite{hansson1994logic} definierte Einbettung verwiesen, aber auch der Fehler bzgl. $\operatorname{EG}\varphi$ gezeigt wird.
 
 \subsection{Model-Checking Algorithmen}
 
@@ -74,7 +76,7 @@ Hier soll kurz erklärt werden, was genau Halbringsemantik ist und wofür sie im
 \subsection{Halbringsemantik zum Auswerten von Wahrscheinlichkeiten}
 \label{HalbringFO}
 
-Verwendung des Viterbi-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen. Dieses Kapitel wird bei Platzproblemen weggelassen und der Übergang von $\mathsf{FO}$ auf $\mathsf{CTL}$ wird kurz in Kapitel \ref{HalbringCTL} passieren.
+Verwendung des Viterbi-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen. Dieses Kapitel wird bei Platzproblemen weggelassen und der Übergang von $\mathsf{FO}$ auf $\mathsf{CTL}$ wird kurz in Kapitel \ref{HalbringCTL} passieren. Falls ich kein veröffentlichtes Paper mit den Informationen finde, benutze ich \cite{gradel2022provenance}.
 
 \subsection{Halbringsemantik für $\CTL$}
 \label{HalbringCTL}
@@ -88,7 +90,7 @@ Unterschiede im Ansatz der beiden Varianten. Falls sich diese einfach beheben la
 \section{Verwandte Arbeiten}
 \label{ChapVerwandt}
 
-Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ hinzufügen sollen hier erläutert werden.
+Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ bzw. Fixpunktlogiken hinzufügen sollen hier erläutert werden.
 
 \subsection{Erweiterung von $\CTL$ durch Echtzeit}
 
@@ -98,6 +100,10 @@ Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschr
 \subsection{Erweiterung von $\CTL$ durch Wahrscheinlichkeiten}
 
 Es gibt auch Logiken die nur Wahrscheinlichkeiten hinzufügen. Lassen sich unterschiedliche Ansätze finden? Lösen diese andere Probleme? Paper mit anderen probabilistischen Logiken (die $\CTL$ erweitern): \cite{hart1984probabilistic}, \cite{lehmann1982reasoning} und \cite{christoff1992reasoning}.
+
+\section{Konklusion}
+
+Hier fasse ich noch einmal kurz die Ergebnisse zusammen. Also was $\PCTL$ ist, wofür es benutzt werden kann und evtl. wie Halbringsemantik ein ähnliches Ergebnis erzielen kann.
 
 \bibliography{references}
 
