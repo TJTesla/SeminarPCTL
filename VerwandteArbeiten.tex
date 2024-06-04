@@ -1,12 +1,89 @@
 \section{Verwandte Arbeiten}
 \label{ChapVerwandt}
 
-Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ bzw. Fixpunktlogiken hinzufügen sollen hier erläutert werden.
+Da nun die Logik $\PCTL$ bekannt ist sollen einige alternative Ansätze bzw. Logiken diskutiert werden, die entweder zeitliche Aspekte oder Wahrscheinlichkeiten hinzufügen.
+Zuerst sollen zwei Logiken betrachtet werden, die Zeit implementieren. 
+Eine davon unterscheidet sich von $\PCTL$ dadurch, dass Zeit nicht mehr diskret durch Hochzählen von Transitionen behandelt wird, sondern reelle Werte dafür verwendet werden \cite{alur1990model}. 
+Die Andere ist eine Verallgemeinerung über Propositionale Temporale Logik $\mathsf{PTL}$ und verwendet einen sogenannten \textit{Einfrier-Operator} \cite{alur1994really}.
+Nachdem diese Logiken miteinander und mit $\PCTL$ verglichen wurden, sollen noch Wahrscheinlichkeiten betrachtet werden.
+Dafür werden Logiken vorgeführt, welche es ermöglichen Wahrscheinlichkeiten auszudrücken.
+% TODO
 
-\subsection{Erweiterung von $\CTL$ durch Echtzeit}
+% Andere Ansätze die entweder nur Zeit oder Wahrscheinlichkeiten zu $\CTL$ bzw. Fixpunktlogiken hinzufügen sollen hier erläutert werden.
 
-Ein anderer Ansatz zum Ergänzen durch Zeit ist die in \cite{alur1990model} definierte Logik, welche erläutert werden soll. Interessant ist auch die Logik aus \cite{jahanian1986safety}, welche eine Fixpunkt-Logik, also ausdrucksstärker als $\CTL$ ist.
-Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschränkung von $p$ auf extreme Werte, also $p\in \{0,1\}$ für $\PCTL$.
+\subsection{Logiken mit Echtzeit}
+
+In diesem Kapitel werden die Logiken \textit{Timed Computation Tree Logic} ($\TCTL$) und \textit{Timed Propositional Temporal Logic} ($\TPTL$) anhand ihrer Syntax sowie Semantik erörtert und ihre Model-Checking Möglichkeit diskutiert. 
+Zusätzlich werden diese dann jeweils mit $\PCTL$ verglichen.
+
+\subsubsection{Timed Computation Tree Logic}
+
+Die Logik $\TCTL$ stellt, ähnlich wie $\PCTL$, eine Möglichkeit zur Verfügung, um zeitliche Zusammenhänge auszudrücken.
+Während dies in $\PCTL$ aber nur mit diskreten Werten möglich ist, verwendet $\TCTL$ reelle Werte, wodurch sich Systeme potentiell besser beschreiben lassen.
+Da dies aber offensichtlicher weise komplexer, als bloß bei jeder verwendeten Transition einen Zähler zu erhöhen, wird eine neue Struktur benötigt, welche Systeme modellieren soll und über welchen $\TCTL$-Formeln ausgewertet werden.
+Dafür definieren wir eine feste Menge $\mathcal{N}$, welche uns Werte für zeitliche Vergleiche in Formeln gibt.
+Der Einfachheit halber definieren wir hier $\mathcal{N}\coloneqq\{0,1,\dots\}=\mathbb{N}$.
+Da es aber offensichtlich eine Bijektion zwischen $\mathbb{N}$ und $\mathbb{Q}$ gibt, lässt sich auch $\mathcal{N}\coloneqq\mathbb{Q}$ festlegen, wodurch sich die Vorteile einer dichten Ordnung\footnote{Eine dichte Ordnung ist eine lineare Ordnung so, dass zwischen je zwei Elementen ein drittes liegt.} im Vergleich zu $\PCTL$ ausnutzen lassen.
+
+\begin{definition}[Zeitliche Graphen]
+	Ein \textit{zeitlicher Graph} ist ein Tupel $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ mit folgenden Definitionen:
+	\begin{itemize}
+		\item $S$ ist eine endliche Menge an Knoten.
+		\item $s_0\in S$ ist der Startzustand.
+		\item $E\subseteq S\times S$ ist die Kantenrelation.
+		\item $C$ ist eine endliche Menge an Uhren.
+		\item $\pi:E\to 2^C$ ist eine Abbildung, die jeder Kante eine Menge an Uhren zuweist.
+		\item $\tau$ ist eine Abbildung, die jeder Kante eine Formel zuweist, die aus Booleschen Junktoren über den atomaren Formeln $x\leq c$ und $c\leq x$ besteht, wobei $c\in C$ und $x\in \mathcal{N}$ gilt.
+		\item Für eine Menge an atomaren Aussagen $\mathsf{AP}$ ist $\mu:S\to 2^{\mathsf{AP}}$ eine Abbildung, die jedem Zustand eine Menge an atomaren Aussagen zuweist.
+	\end{itemize}
+	
+	Ein zeitlicher Graph besitzt also eine Menge an sogenannten Uhren $C$.
+	Diese zählen unabhängig voneinander hoch so, dass jede Uhr zu jedem \glqq Zeitpunkt\grqq{} einen reellen Wert $x\in \mathbb{R}_{\geq 0}$ speichert.
+	Mithilfe von $\pi$ lassen sich Uhren zurücksetzen, für jede Transition lässt sich also eine Menge an Uhren auswählen, welche mit dem Wechsel über die Transition zurückgesetzt werden.
+	Zusätzlich existiert für jede Kante eine Formel, welche bestimmte Voraussetzungen an die Transition stellt.
+\end{definition}
+
+Um diese Definition besser zu verstehen, soll ein Beispiel angeführt werden. Sei 
+\begin{align*}
+\mathfrak{S}&=( \\
+&S= \{s_0,s_1,s_2\},\\
+&s_0,\\
+&E=\{(s_0,s_2),(s_1,s_0),(s_1,s_1),(s_1,s_2),(s_2,s_1)\},\\
+&C=\{x,y\},\\
+&\pi(u,v) = \begin{cases}
+	\{x\} & \text{falls } v = s_2 \\
+	\{y\} & \text{falls } u = s_2 \\
+	\emptyset & \text{sonst}
+\end{cases}\\
+&\tau=\{\}\\
+)&
+\end{align*}
+Dieses lässt sich in Abbildung \ref{} sehen.
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[shorten >= 1pt, node distance=6cm, on grid, auto]
+			\node[state, initial above, initial text={}, align=center] (s_0) [] {$s_0$ \\ $\{\mathsf{running}\}$};
+			\node[state, align=center] (s_1) [right=of s_0] {$s_1$ \\ $\{\mathsf{stopped},$\\$\mathsf{warning}\}$};
+			\node[state, align=center] (s_2) [below=of s_1] {$s_2$ \\ $\{\mathsf{stopped},$\\$\mathsf{error}\}$};
+			
+			\path[-stealth]
+			(s_0) edge [] node[align=center] {$\top$ \\ $\reset{x}$} (s_2)
+			
+			(s_1) edge [bend right] node {$0.1$} (s_2)\textsc{}
+			(s_1) edge [] node {$0.4$} (s_0)
+			
+			(s_2) edge [bend right] node {$0.4$} (s_1)
+			;
+		\end{tikzpicture}
+		
+		\caption{Ein Beispiel für einen zeitlichen Graphen}
+		\label{ZeitlicherGraph1}
+	\end{center}
+\end{figure}
+
+% Ein anderer Ansatz zum Ergänzen durch Zeit ist die in \cite{alur1990model} definierte Logik, welche erläutert werden soll. Interessant ist auch die Logik aus \cite{jahanian1986safety}, welche eine Fixpunkt-Logik, also ausdrucksstärker als $\CTL$ ist.
+% Ein Vergleich mit $\PCTL$ bzgl. der Ausdruckskraft soll folgen, evtl. mit Beschränkung von $p$ auf extreme Werte, also $p\in \{0,1\}$ für $\PCTL$.
 
 \subsection{Erweiterung von $\CTL$ durch Wahrscheinlichkeiten}
 

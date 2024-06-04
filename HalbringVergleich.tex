@@ -148,15 +148,22 @@ Aus diesem Grund soll nun Halbringsemantik für $\CTL$ eingeführt werden.
 In diesem Kapitel wollen wir die im letzten Kapitel für $\FO$ entwickelte Semantik auf $\CTL$ ausweiten. 
 Die so erhaltene Logik bezeichnen wir als $\cCTL$, was für \textit{constraint-semiring-}$\CTL$ steht \cite{lluch2005quantitative}.
 Ein wichtiger Unterschied zu $\FO$ ist aber, dass $\CTL$ eine modale Logik ist, wodurch es nicht ausreicht eine Formel in einen einzelnen Wert eines Halbrings auszuwerten.
-Aus diesem Grund definiert eine Formel eine Abbildung von den Kanten des Transitionssystems (siehe Definition \ref{DefKripkeStruk}) in einen Halbring. 
-Formal definieren wir für einen Halbring $\mathfrak{A}=(A,+,\cdot,0,1)$ und eine Kripkestruktur $\mathcal{S}=(S, E, \mathcal{L})$ eine Abbildung $v:E\to A$ und weiter $V\coloneqq A^E$ die Menge aller Bewertungen der Zustände.
-Nun erhalten wir einen weiteren Halbring $\mathcal{V}=(V,\oplus,\otimes,\boldsymbol{0},\boldsymbol{1})$, wobei $\boldsymbol{0}:E\to A, e\mapsto 0$, $\boldsymbol{1}:E\to A,e\mapsto 1$ gelten, und die beiden zweistelligen Funktionen wie folgt definiert sind: $(v\oplus v')(e)\coloneqq v(e)+v'(e)$ und $(v\otimes v')(e)\coloneqq v(s)\cdot v'(s)$.
+Aus diesem Grund definiert eine Formel eine Abbildung von den Kanten des Transitionssystems (siehe Definition \ref{DefKripkeStruk}) in einen Halbring.
+Formal definiert ein Halbring $\mathfrak{A}=(A,+,\cdot,0,1)$ und eine Kripkestruktur $\mathfrak{S}=(S, E, \mathcal{L})$ also eine Abbildung $v:E\to A$.
+Weiter definieren wir $V\coloneqq A^{E}$ die Menge aller Bewertungen der Zustände.
+Damit erhalten wir einen weiteren Halbring $\mathcal{V}=(V,\oplus,\otimes,\boldsymbol{0},\boldsymbol{1})$, mit folgenden Definition:
+\begin{itemize}
+	\item $\oplus$ ist eine zweistellige Funktion mit $(v\oplus v')(e) = v(e)+v'(e)$
+	\item $\otimes$ ist eine zweistellige Funktion mit $(v\otimes v')(e) = v(e)\cdot v'(e)$
+	\item $\boldsymbol{0}$ ist eine Konstante für die gilt $\boldsymbol{0}(e) = 0\in A$
+	\item $\boldsymbol{1}$ ist eine Konstante für die gilt $\boldsymbol{1}(e) = 1\in A$
+\end{itemize}s
 
 \begin{definition}[Syntax von $\cCTL$]
-	Sei $\mathfrak{A}=(A+,\cdot,0,1)$ ein wie in Kapitel \ref{ChapHalbringFO} definierter Halbring und sei $a\in A$ und $v\in V$. Dann lässt sich $\cCTL$ mithilfe folgender Grammatiken definieren:
+	Sei $\mathfrak{A}=(A+,\cdot,0,1)$ ein wie in Kapitel \ref{ChapHalbringFO} definierter Halbring und sei $a\in A$ und $x\in \mathsf{AP}$. Dann lässt sich $\cCTL$ mithilfe folgender Grammatiken definieren:
 	\begin{align*}
-		\varphi &\Coloneqq a \, | \, v \, | \, \varphi \land \varphi \, | \, \varphi \lor \varphi \, | \, \neg\varphi \, | \, \kappa \psi \, | \, \kappa \boldsymbol{X}\varphi \\
-		\kappa &\Coloneqq \sum \, | \, \prod \\
+		\varphi &\Coloneqq a \, | \, x \, | \, \varphi \land \varphi \, | \, \varphi \lor \varphi \, | \, \neg\varphi \, | \, \kappa \psi \, | \, \kappa \boldsymbol{X}\varphi \\
+		\kappa &\Coloneqq \bigsqcup \, | \, \bigsqcap \\
 		\psi &\Coloneqq \boldsymbol{F}\varphi \, | \, \boldsymbol{G}\varphi \, | \, [\varphi\boldsymbol{U}\varphi] \, | \, [\varphi\boldsymbol{W}\varphi]
 	\end{align*}
 	
@@ -174,6 +181,10 @@ Zum Einen ist es möglich einen Negationsoperator $-:A\to A$ zu definieren.
 Zum Anderen lässt sich $v$ ausweiten auf eine Bewertung $v^*:\{E(x,y), \neg E(x,y) : x,y\in S\}\to A$ so, dass, wie in Kapitel \ref{ChapHalbringFO}, nicht nur der Existenz einer Kante ein Wert zugeordnet wird, sondern auch dem Fehlen der Kante.
 Im Weiteren soll der Letztere Ansatz verwendet werden.
 Demnach definieren wir die Menge $V^*\coloneqq A^{\{E(x,y), \neg E(x,y) : x,y\in S\}}$ aller erweiterten Bewertungen.
+Wie für $\FO$ wird demnach dann aber auch eine Negationsnormalform benötigt, die
+
+Zudem betrachten wir $\mathcal{L}$ nicht mehr als Abbildung von Zuständen auf Teilmengen von $\mathsf{AP}$, sondern als Menge $\{v_x : x\in \mathsf{AP}\}$ von Abbildungen $v_x:S\to A$, die jedem Zustand einen Halbring-Wert zuweisen.
+Betrachtet man dies mit $\mathfrak{A}=\mathbb{B}$ dem Booleschen-Halbring, dann erhält man $v_x:S\to \{0,1\}$, was uns die gewohnte Bedeutung von atomaren Aussagen gibt.
 
 \begin{definition}[Semantik von $\cCTL$]
 	Für einen Halbring $\mathfrak{A}=(A,+,\cdot,0,1)$ und eine Kripke-Struktur $\mathfrak{S}=(S,E,\mathcal{L})$ wird eine $\cCTL$-Formel $\varphi$ zu einer Abbildung $v\in V$ ausgewertet.
