@@ -155,8 +155,8 @@ Zur Vereinfachung definieren wir noch die Relation $\sttstile{}{}_\mathfrak{S} \
 \begin{definition}[Semantik von $\PCTL$ auf Markov-Ketten]
 	Sei $\mathfrak{S}=(S,s_i,\mathcal{T},\mathcal{L})$ eine Markov-Kette und $s_0\in S$. Dann lässt sich die Semantik für $\PCTL$-Formeln induktiv definieren \cite{hansson1994logic}:
 	\begin{enumerate}
-		\item $s_0 \models_\mathfrak{S} \top \Leftrightarrow \mathfrak{S}\models \forall x(x=x)$ und $s_0\models_\mathfrak{S} \bot \Leftrightarrow \mathfrak{S}\models \exists x(x\neq x)$
-		\item Für $a\in \mathsf{AP}$ gilt $s_0\models_\mathfrak{S} a \Leftrightarrow a\in \mathcal{L}(s_0)$
+		\item $s_0 \models_\mathfrak{S} \top \Leftrightarrow \mathfrak{S}\models \forall x(x=x)\text{ und }s_0\models_\mathfrak{S} \bot \Leftrightarrow \mathfrak{S}\models \exists x(x\neq x)$
+		\item $\text{Für }a\in \mathsf{AP}\text{ gilt }s_0\models_\mathfrak{S} a \Leftrightarrow a\in \mathcal{L}(s_0)$
 		\item $s_0 \models_\mathfrak{S}\neg \varphi \Leftrightarrow \text{ nicht} s_0\models_\mathfrak{S} \varphi$
 		\item $s\models_\mathfrak{S} \varphi_1\land\varphi_2 \Leftrightarrow s_0\models_\mathfrak{S} \varphi \text{ und } s_0\models_\mathfrak{S} \varphi_2$
 		\item $\sigma \sttstile{}{} \varphi_1\operatorname{U}^{\leq t}\varphi_2 \Leftrightarrow \exists i\leq t(\sigma[i]\models_\mathfrak{S} \varphi_2 \text{ und } \sigma[j]\models_\mathfrak{S} \varphi_1 \text{ für alle } 0 \leq j<i)$

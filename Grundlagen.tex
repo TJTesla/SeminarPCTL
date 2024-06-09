@@ -28,13 +28,13 @@ Bevor die Semantik erläutert wird, sollen zuerst die Strukturen gezeigt werden,
 \begin{definition}[Semantik von $\CTL$]
 	Für ein Transitionssystem $\mathcal{K}=(V,E,\mathcal{L})$ können wir damit induktiv die Modellbeziehung $\models$ zwischen einem Knoten $v\in V$ und $\CTL$-Formeln definieren \cite{baier2008principles}:
 	\begin{enumerate}
-		\item $v\models \top \Leftrightarrow \mathcal{K}\models\forall x(x=x)$ und $v\models \bot \Leftrightarrow \mathcal{K}\models\exists x(x\neq x)$.
-		\item Für $a\in \operatorname{AP}$ gilt $v\models a \Leftrightarrow a\in \mathcal{L}(v)$.
+		\item $v\models \top \Leftrightarrow \mathcal{K}\models\forall x(x=x)\text{ und }v\models \bot \Leftrightarrow \mathcal{K}\models\exists x(x\neq x)$.
+		\item $\text{Für }a\in \operatorname{AP}\text{ gilt }v\models a \Leftrightarrow a\in \mathcal{L}(v)$.
 		\item $\text{Es gilt }v\models \neg \varphi \Leftrightarrow v\not\models \varphi$,\\
 		$v\models \varphi_1 \land \varphi_2 \Leftrightarrow v\models \varphi_1 \text{ und } v\models \varphi_2$,\\
 		$v\models \varphi_1 \lor \varphi_2 \Leftrightarrow v\models \varphi_1 \text{ oder } v\models \varphi_2$,
-		\item $\text{Es gilt }v\models \operatorname{EX}\varphi \Leftrightarrow$ es ex. ein $w\in V$ mit $(v,w)\in E$ und $w\models \varphi$ und analog:\\ 
-		$v\models \operatorname{AX}\varphi \Leftrightarrow$ für alle $w\in V$ mit $(v,w)\in E$ gilt $w\models \varphi$.
+		\item $\text{Es gilt }v\models \operatorname{EX}\varphi \Leftrightarrow$ es ex. ein $w\in V$ mit $(v,w)\in E\text{ und }w\models \varphi$ und analog:\\ 
+		$v\models \operatorname{AX}\varphi \Leftrightarrow$ für alle $w\in V$ mit $(v,w)\in E\text{ gilt }w\models \varphi$.
 		\item $\text{Es gilt }v\models \EU{\varphi_1}{\varphi_2} \Leftrightarrow$ es existiert ein Pfad $\sigma$ in $\mathcal{K}$, der in $v$ beginnt und ein $i\in \mathbb{N}$ so, dass $\sigma[i]\models \varphi_2$ und für alle $0\leq j < i$ gilt $\sigma[i]\models \varphi_1$. 
 		Analog ist die Definition für $\AU{\varphi_1}{\varphi_2}$, es muss dann aber für jeden in $v$ beginnenden Pfad ein $i\in \mathbb{N}$ geben so, dass der $i$-te Zustand $\varphi_2$ und alle Zustände davor $\varphi_1$ erfüllen.
 		\item $\text{Es gilt }v\models \EW{\varphi_1}{\varphi_2} \Leftrightarrow$ es existiert ein (unendlicher) Pfad $\sigma$ so, dass entweder ein $i\in \mathbb{N}$ existiert mit $\sigma[i]\models \varphi_2$ und für alle $0\leq j < i$ gilt $\sigma[j]\models \varphi_1$, oder es gilt $\sigma[i]\models \varphi_1$ für alle $i\in \mathbb{N}$.

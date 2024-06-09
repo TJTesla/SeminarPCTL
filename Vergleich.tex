@@ -133,11 +133,11 @@ Schließlich können wir die Semantik von $\TCTL$ definieren.
 	Sei $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ ein zeitlicher Graph.
 	Dann können wir die Modellrelation $\models$ zwischen Konfigurationen von zeitlichen Graphen und $\TCTL$-Formeln induktiv definieren. Sei $s\in S$, $\nu\in \Gamma(\mathfrak{S})$, $p\in \mathsf{AP}$, $c\in \mathcal{N}$ und $\sim\in \{<,\leq,=,\geq,>\}$. \cite{alur1990model}
 	\begin{itemize}
-		\item $\langle s,\nu\rangle \models p$ gdw. $p\in \mu(s)$
-		\item $\langle s,\nu\rangle \models \varphi_1\land \varphi_2$ gdw. $s\models \varphi_1$ und $s\models \varphi_2$
-		\item $\langle s,\nu \rangle \models \neg\varphi$ gdw. $s\not\models\varphi$
-		\item $\langle s,\nu \rangle \models \exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ gdw. es einen $\langle s,\nu\rangle$-Lauf gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und $s_j\models \varphi_1$ für $1\leq j < i$.
-		\item $\langle s,\nu \rangle\models \forall\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ gdw. für alle $\langle s,\nu\rangle$-Läufe gilt, dass es ein $i\in \mathbb{N}$ gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und für alle $1\leq j < i$ gilt $s_j\models \varphi_1$.
+		\item $\langle s,\nu\rangle \models p\text{ gdw. }p\in \mu(s)$
+		\item $\langle s,\nu\rangle \models \varphi_1\land \varphi_2\text{ gdw. }s\models \varphi_1\text{ und }s\models \varphi_2$
+		\item $\langle s,\nu \rangle \models \neg\varphi\text{ gdw. }s\not\models\varphi$
+		\item $\langle s,\nu \rangle \models \exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2\text{ gdw. es einen }\langle s,\nu\rangle$-Lauf gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und $s_j\models \varphi_1$ für $1\leq j < i$.
+		\item $\langle s,\nu \rangle\models \forall\varphi_1 \operatorname{U}_{\sim c}\varphi_2\text{ gdw. für alle }\langle s,\nu\rangle$-Läufe gilt, dass es ein $i\in \mathbb{N}$ gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und für alle $1\leq j < i$ gilt $s_j\models \varphi_1$.
 	\end{itemize}
 \end{definition}
 
@@ -220,7 +220,7 @@ $$
 Wie in \cite{cleaveland2005probabilistic} gezeigt, verhält sich dies dann wie ein Wahrscheinlichkeitsmaß.
 
 Mit diesem Maß haben wir die Werkzeuge, um die Erweiterung von $\Lmu$ zu definieren.
-\begin{definition}[Syntax von der generalized probabilistic logic]
+\begin{definition}[Syntax von der $\GPL$]
 	Die generalized probabilistic logic ($\GPL$) lässt sich durch die folgenden Grammatiken definieren. Dabei ist $X$ eine Variable, $a\in \mathsf{Act}$ eine Aktion und $p\in [0,1]\subseteq \mathbb{R}$.
 	\begin{align*}
 		\Phi &\Coloneqq a \,|\, \neg a \,|\, \Phi \land \Phi \,|\, \Phi\lor \Phi\,|\, \mathsf{Pr}_{>p}\Psi \,|\, \mathsf{Pr}_{\geq p}\Psi \\
@@ -236,7 +236,7 @@ Mit diesem Maß haben wir die Werkzeuge, um die Erweiterung von $\Lmu$ zu defini
 Um die Formeln nun auszuwerten, müssen wir zwischen $\Phi$ und $\Psi$ unterscheiden.
 Das Ziel ist es, $\psi\in \Psi$ zu einem Wert in $[0,1]$ auszuwerten, um dann mithilfe des $\mathsf{Pr}$-Operators die Modelleigenschaft zu entscheiden.
 Daher wollen wir dafür das Wahrscheinlichkeitsmaß $\mu_\mathfrak{S}$ verwenden.
-Genauer wird mit der Funktion $\Theta_\mathfrak{S}:\Psi \to 2^{\mathcal{M}_\mathfrak{S}}$ jeder \fuzzy eine Menge an maximalen Bäumen über dem RPLTS zugeordnet, welche dann zu einem Wahrscheinlichkeitswert ausgewertet werden kann. \cite{cleaveland2005probabilistic}
+Genauer wird mit der Funktion $\Theta_\mathfrak{S}:\Psi \to 2^{\mathcal{M}_\mathfrak{S}}$ jeder fusseligen Formel eine Menge an maximalen Bäumen über dem RPLTS zugeordnet, welche dann zu einem Wahrscheinlichkeitswert ausgewertet werden kann. \cite{cleaveland2005probabilistic}
 
 Diese Idee wollen wir nun formalisieren. Die Funktion $\Theta_\mathfrak{S}$ wird induktiv über den Formelaufbau definiert:
 \begin{itemize}
@@ -254,12 +254,12 @@ Mit dieser Funktion können wir nun die Semantik von $\GPL$ definieren.
 \begin{definition}[Semantik von $\GPL$]
 	Sei $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ ein RPLTS und $a\in \mathsf{AP}$. Dann ist $\models_\mathfrak{S}\subseteq S\times \Phi$ induktiv definiert \cite{cleaveland2005probabilistic}:
 	\begin{itemize}
-		\item $s\models_\mathfrak{S} a$ gdw. $a\in \mathcal{L}(s)$
-		\item $s\models_\mathfrak{S} \neg a$ gdw. $a\notin \mathcal{L}(s)$
-		\item $s\models_\mathfrak{S} \varphi_1\land\varphi_2$ gdw. $s\models_\mathfrak{S}\varphi_1$ und $s\models_\mathfrak{S}\varphi_2$
-		\item $s\models_\mathfrak{S} \varphi_1\lor\varphi_2$ gdw. $s\models_\mathfrak{S}\varphi_1$ oder $s\models_\mathfrak{S}\varphi_2$
-		\item $s\models_\mathfrak{S} \mathsf{Pr}_{>p}\psi$ gdw. $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)>p$
-		\item $s\models_\mathfrak{S} \mathsf{Pr}_{\geq p}$ gdw. $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)\geq p$
+		\item $s\models_\mathfrak{S} a\text{ gdw. }a\in \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \neg a\text{ gdw. }a\notin \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \varphi_1\land\varphi_2\text{ gdw. }s\models_\mathfrak{S}\varphi_1\text{ und }s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \varphi_1\lor\varphi_2\text{ gdw. }s\models_\mathfrak{S}\varphi_1\text{ oder }s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{>p}\psi\text{ gdw. }\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)>p$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{\geq p}\text{ gdw. }\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)\geq p$
 	\end{itemize}
 \end{definition}
 
