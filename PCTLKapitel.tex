@@ -5,9 +5,8 @@
 
 Wie in Kapitel \ref{ChapGrundlagen} gezeigt, lassen sich mithilfe von $\CTL$ viele interessante Eigenschaften von nicht-deterministischen System beschreiben. 
 Jedoch gibt es auch Anwendungsfälle, in denen mehr Ausdruckskraft benötigt wird, als ein All- und Existenzquantor liefern können.
-Ein Gebiet in dem dies stark auffällt sind Soft-Realtime Systeme. 
-In diesen existieren für Prozesse bestimmte Zeitschranken (\textit{Deadlines}), im Gegensatz zu Hard-Realtime Systemen führt das einhalten einer Zeitschranke aber nicht zu einem Systemabbruch oder katastrophalem Ereignis, sondern stellt beispielsweise nur eine Verschlechterung der Effizienz dar. \cite{hansson1994logic}.
-Um eben solche Systeme gut beschreiben zu können benötigt man zwei weitere Aspekte:
+Ein Gebiet in dem dies stark auffällt sind Soft-Realtime Systeme, wie sie in der Einführung definiert wurden. 
+Um eben solche Systeme gut beschreiben zu können, benötigt man zwei weitere Aspekte:
 \begin{enumerate}
 	\item Um die Zeitschranken zu formulieren wird ein Konzept von Zeit benötigt. Dieses soll aussagen können, dass zwei Ereignisse eine bestimmte Zeitspanne $t$ voneinander entfernt sind.
 	\item Da aber das Verfehlen einer Zeitschranke nicht unbedingt zum Verwerfen einer Formel führen soll, werden zusätzlich Wahrscheinlichkeiten benötigt. 
@@ -15,7 +14,7 @@ Um eben solche Systeme gut beschreiben zu können benötigt man zwei weitere Asp
 \end{enumerate}
 Kombiniert man diese Aspekte lassen sich Eigenschaften wie \glqq Nach Ereignis X passiert innerhalb von 15 Zeiteinheiten mit Wahrscheinlichkeit 90\% Ereignis Y\grqq{} oder \glqq Ereignis A tritt mit einer Wahrscheinlichkeit von 90\% in 10 und mit 95\% in 20 Zeitschritten auf\grqq. 
 Eine Logik, die eben diese Erweiterungen von $\CTL$ sinnvoll implementiert ist die Logik \text{Probabilistic Computation Tree Logic} ($\PCTL$). 
-Sinnvoll bedeutet hier, dass es einen Model Checking Algorithmus mit polynomieller Laufzeit gibt. 
+Sinnvoll bedeutet hier, dass es einen Model-Checking Algorithmus mit polynomieller Laufzeit gibt. 
 In diesem Kapitel soll zuerst die Syntax von $\PCTL$ erläutert werden, danach die dazugehörige Semantik aufgezeigt werden, um dann zwei verschiedene Ansätze für das Model Checking von $\PCTL$ mit Transitionssystemen zu zeigen. 
 Im Anschluss sollen die kennengelernten Konzepte der Logik sowie des Model Checkings an einem Beispiel erläutert werden.
 

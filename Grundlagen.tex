@@ -1,7 +1,7 @@
 \section{Grundlagen}
 \label{ChapGrundlagen}
 
-Um Erweiterungen einer Logik zu verstehen ist es ratsam die Grundlegende auch zu kennen. Aus diesem Grund soll in diesem Kapitel in die Logik \textit{Computation Tree Logic} ($\CTL$) und naheliegende, wichtige Themen eingeleitet werden.
+Um Erweiterungen einer Logik zu verstehen ist es ratsam, die Grundlegende auch zu kennen. Aus diesem Grund soll in diesem Kapitel in die Logik \textit{Computation Tree Logic} ($\CTL$) und naheliegende, wichtige Themen eingeleitet werden.
 
 $\CTL$ ist eine temporale Logik um Aussagen in nicht-deterministischen Systemen zu treffen. 
 Dafür betrachtet man Kripkestrukturen, welche eine Art Graph darstellen, da diese viele Eigenschaften liefern, die für $\CTL$-Anwendungsfälle interessant sind.
@@ -52,14 +52,11 @@ Um einige Eigenschaften einfacher auszudrücken werden zusätzlich noch weitere 
 	\item $\operatorname{EF}\varphi \equiv \EU{\top}{\varphi}$ und $\operatorname{AF}\varphi \equiv \AU{\top}{\varphi}$ bedeuten intuitiv, dass es einen Pfad gibt bzw. für alle Pfade irgendwann $\varphi$ gilt.
 	\item $\operatorname{EG}\varphi \equiv \neg\operatorname{EF}\neg\varphi$ und $\operatorname{AG}\varphi \equiv \neg\operatorname{AF}\neg\varphi$ bedeuten, dass es einen Pfad gibt bzw. für alle Pfade gilt, dass in jedem Zustand $\varphi$ gilt.
 \end{itemize}
-Mithilfe dieser Syntax und zugehöriger Semantik auf Transitionssystemen lassen sich nun einige interessante Aussagen formulieren:
+Mithilfe dieser Syntax und zugehöriger Semantik auf Transitionssystemen wollen wir nun eine Beispielhafte $\CTL$-Formel betrachten:
 \begin{example}[Beispiele für $\CTL$-Formeln und deren Bedeutung]
-	Sei die Menge der atomaren Aussagen $\mathsf{AP}=\{\mathsf{idle}, \mathsf{error}\}$
-	\begin{itemize}
-		\item $\operatorname{AG}\operatorname{AF}\mathsf{idle}$ \\ Die Formel gilt für einen Zustand $v$, wenn auf jedem in $v$ beginnenden Pfad, für jeden Zustand auf diesem, irgendwann $\mathsf{idle}$ erfüllt. Das heißt, $\mathsf{idle}$ gilt unendlich oft.
-		\item $\operatorname{EF}\operatorname{AG}\mathsf{error}$ \\
-		Diese $\CTL$-Formel besagt, dass es einen Pfad gibt, auf dem ab irgendeinem Zustand alle Zustände die atomare Aussage $\mathsf{error}$ erfüllen. Das heißt, es gibt einen Pfad mit einem irreversiblen Fehler.
-	\end{itemize}
+	Sei die Menge der atomaren Aussagen $\mathsf{AP}=\{\mathsf{idle}, \mathsf{error}\}$.
+	Dann besagt die Formel $\operatorname{EF}\operatorname{AG}\mathsf{error}$, dass es einen Pfad gibt, auf dem ab irgendeinem Zustand alle Zustände die atomare Aussage $\mathsf{error}$ erfüllen. 
+	Das heißt, es gibt einen Pfad mit einem irreversiblen Fehler.
 \end{example}
 
 Zusätzlich soll noch angemerkt werden, dass $0\in \mathbb{N}$ gilt.
