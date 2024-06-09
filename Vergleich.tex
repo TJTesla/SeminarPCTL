@@ -1,22 +1,21 @@
 \section{Vergleich mit anderen Logiken}
 \label{ChapVerwandt}
 
-Da nun die Logik $\PCTL$ bekannt ist sollen einige alternative Ansätze bzw. Logiken diskutiert werden, die entweder zeitliche Aspekte oder Wahrscheinlichkeiten hinzufügen.
+Da nun die Logik $\PCTL$ bekannt, ist sollen zwei alternative Ansätze bzw. Logiken diskutiert werden, die zeitliche Aspekte bzw. Wahrscheinlichkeiten hinzufügen.
 Dafür sollen zwei Logiken genauer betrachtet werden.
 Eine erweitert $\CTL$ durch ein komplexes System welches reelle Zeitwerte erlaubt und so sehr viel mehr über Zeit aussagen kann als $\PCTL$.
-Die andere Logik stellt eine Erweiterung durch Wahrscheinlichkeiten dar.
-Genauer wird eine Erweiterung des modalen $\mu$-Kalküls betrachtet, welche es ermöglicht, ähnlich wie in $\PCTL$ auszusagen, dass eine Formel für mindestens bzw. mehr als $p\%$ der Fälle gilt.
+Die andere Logik stellt eine Erweiterung des modal $\mu$-Kalküls durch Wahrscheinlichkeiten dar.
+Diese ermöglicht es, ähnlich wie in $\PCTL$ auszusagen, dass eine Formel für mindestens bzw. mehr als $p\%$ der Fälle gilt.
 
-\subsection{Timed Computation Tree Logic}
+\subsection{Timed-Computation-Tree-Logic}
 
-In diesem Kapitel wird die in \cite{alur1990model} definierte Logik \textit{Timed Computation Tree Logic} ($\PCTL$) besprochen. Dafür werden die dazugehörigen Strukturen, ihre Syntax sowie ihre Semantik erörtert und durch Beispiele dargestellt.
+In diesem Kapitel wird die in \cite{alur1990model} definierte Logik \textit{Timed-Computation-Tree-Logic} ($\PCTL$) besprochen. Dafür werden die dazugehörigen Strukturen, ihre Syntax sowie ihre Semantik erörtert und durch Beispiele dargestellt.
 
 Die Logik $\TCTL$ stellt, ähnlich wie $\PCTL$, eine Möglichkeit zur Verfügung, um zeitliche Zusammenhänge auszudrücken.
 Während dies in $\PCTL$ aber nur mit diskreten Werten möglich ist, verwendet $\TCTL$ reelle Werte, wodurch sich Systeme potentiell besser beschreiben lassen.
 Da dies aber offensichtlicher weise komplexer, als bloß bei jeder verwendeten Transition einen Zähler zu erhöhen, wird eine neue Struktur benötigt, welche Systeme modellieren soll und über welchen $\TCTL$-Formeln ausgewertet werden.
 Dafür definieren wir eine feste Menge $\mathcal{N}$, welche uns Werte für zeitliche Vergleiche in Formeln gibt.
-Der Einfachheit halber definieren wir hier $\mathcal{N}\coloneqq\{0,1,\dots\}=\mathbb{N}$.
-Da es aber offensichtlich eine Bijektion zwischen $\mathbb{N}$ und $\mathbb{Q}$ gibt, lässt sich auch $\mathcal{N}\coloneqq\mathbb{Q}$ festlegen, wodurch sich die Vorteile einer dichten Ordnung\footnote{Eine dichte Ordnung ist eine lineare Ordnung so, dass zwischen je zwei Elementen ein drittes liegt.} im Vergleich zu $\PCTL$ ausnutzen lassen. \cite{alur1990model}
+Der Einfachheit halber definieren wir hier $\mathcal{N}\coloneqq\{0,1,\dots\}=\mathbb{N}$, wegen $\vert\mathbb{N}\vert=\vert\mathbb{Q}\vert$ lässt sich aber natürlich auch $\mathcal{N}=\mathbb{Q}$ wählen. \cite{alur1990model}
 
 \begin{definition}[Zeitliche Graphen]
 	Ein \textit{zeitlicher Graph} ist ein Tupel $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ mit folgenden Definitionen \cite{alur1990model}:
@@ -61,7 +60,7 @@ Um diese Definition besser zu verstehen, soll ein Beispiel angeführt werden.
 			\{\mathsf{stopped},\mathsf{error}\} & \text{falls } s = s_2
 		\end{cases}$
 	\end{itemize}
-	Dann lässt sich die graphische Darstellung von $\mathfrak{S}$ in Abbildung \ref{ZeitlicherGraph1} sehen\footnote{Die Formel $\top$ wird als Platzhalter für eine beliebige Tautologie wie zum Beispiel $x \geq 2 \lor \neg(x\geq 2)$.}.
+	Dann lässt sich die graphische Darstellung von $\mathfrak{S}$ in Abbildung \ref{ZeitlicherGraph1} sehen\footnote{Die Formel $\top$ wird als Platzhalter für eine beliebige Tautologie wie zum Beispiel $x \geq 2 \lor \neg(x\geq 2)$ verwendet.}.
 	
 	Es lässt sich also sehen, dass die Uhr $x$ die zeit stoppt, die seit dem Letzten Fehler passiert ist, während die Uhr $y$ die Zeit misst, die seit der Letzten Wiederaufnahme des Betriebs des Systems vergangen ist.
 	Weiter gibt $\tau$ uns die Information, dass wenn ein Fehler auftritt, für zwei Zeiteinheiten der Fehler bestehen bleiben muss und die darauf folgende Fehlermeldung für mindestens drei Zeiteinheiten seit dem auftreten des Fehlers beibehalten wird.
@@ -107,11 +106,11 @@ Es ist also möglich nicht nur zu diskreten Zeitpunkten einen Zustand zu wechsel
 	$$(\langle s,\nu,0\rangle = \langle s_1,\nu_1,t_1\rangle,\langle s_2,\nu_2,t_2\rangle,\dots)\in (S\times \Gamma(\mathfrak{S})\times \mathbb{R}_{\geq 0})^\omega$$ 
 	so, dass folgende Regeln eingehalten werden \cite{alur1990model}:
 	\begin{enumerate}
-		\item Für alle $i\in \mathbb{N}\setminus\{0\}$ gilt $t_{i+1}>t_i$. Die Zeit-Werte steigen also streng monoton.
-		\item Für die Tripel $\langle s_i,\nu_i,t_i\rangle$ und $\langle s_{i+1},\nu_{i+1},t_{i+1}\rangle$ definieren wir $e_i=(s_i,s_{i+1})$ und es muss gelten $e_i\in E$.
-		\item Für alle $i\in \mathbb{N}\setminus \{0\}$ gilt $\nu_{i+1}=[\pi(e_i)\mapsto 0](\nu_i+t_{i+1}-t)$.
-		\item Für die boolesche Voraussetzung $\tau(e_i)$ ist $(\nu_i + t_{i+1}-t_i)$ eine erfüllende Belegung der Uhr-Werte.
-		\item Für jedes $t\in \mathbb{R}_{\geq 0}$ gibt es ein $j$ so, dass $t_j\geq t$. Es gibt also keine obere Schranke für die Zeit-Werte.
+		\item $\text{Für alle } i\in \mathbb{N}\setminus\{0\}$ gilt $t_{i+1}>t_i$. Die Zeit-Werte steigen also streng monoton.
+		\item $\text{Für die Tripel } \langle s_i,\nu_i,t_i\rangle$ und $\langle s_{i+1},\nu_{i+1},t_{i+1}\rangle$ definieren wir $e_i=(s_i,s_{i+1})$ und es muss gelten $e_i\in E$.
+		\item $\text{Für alle } i\in \mathbb{N}\setminus \{0\}$ gilt $\nu_{i+1}=[\pi(e_i)\mapsto 0](\nu_i+t_{i+1}-t)$.
+		\item $\text{Für die boolesche Voraussetzung } \tau(e_i)$ ist $(\nu_i + t_{i+1}-t_i)$ eine erfüllende Belegung der Uhr-Werte.
+		\item $\text{Für jedes } t\in \mathbb{R}_{\geq 0}$ gibt es ein $j$ so, dass $t_j\geq t$. Es gibt also keine obere Schranke für die Zeit-Werte.
 	\end{enumerate}
 \end{definition}
 
@@ -126,13 +125,13 @@ Nun können wir $\TCTL$ definieren.
 	Die Menge der $\TCTL$-Formeln sind die ausdrücke, die von $\varphi$ erzeugt werden. \cite{alur1990model}
 \end{definition}
 
-Informell soll $\exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ bedeuten, dass es einen Präfix gibt, der $\kappa c$ Zeiteinheiten lang ist und in dem $\varphi_1$ gilt, wobei im Zustand nach dem Präfix $\varphi_2$ gelten muss.
-Die Bedeutung von $\forall\varphi_1 \operatorname{U}_{\kappa c}\varphi_2$ ist analog.
+Informell soll $\exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ bedeuten, dass es einen Präfix gibt, der $\sim c$ Zeiteinheiten lang ist und in dem $\varphi_1$ gilt, wobei im letzten Zustand des Präfixes $\varphi_2$ gelten muss.
+Die Bedeutung von $\forall\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ ist analog.
 
 Schließlich können wir die Semantik von $\TCTL$ definieren.
 \begin{definition}[Semantik von $\TCTL$]
 	Sei $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ ein zeitlicher Graph.
-	Dann können wir die Modellrelation $\models$ zwischen Konfigurationen von zeitlichen Graphen und $\TCTL$-Formeln induktiv definieren. Sei $s\in S$, $nu\in \Gamma(\mathfrak{S})$, $p\in \mathsf{AP}$, $c\in \mathcal{N}$ und $\sim\in \{<,\leq,=,\geq,>\}$. \cite{alur1990model}
+	Dann können wir die Modellrelation $\models$ zwischen Konfigurationen von zeitlichen Graphen und $\TCTL$-Formeln induktiv definieren. Sei $s\in S$, $\nu\in \Gamma(\mathfrak{S})$, $p\in \mathsf{AP}$, $c\in \mathcal{N}$ und $\sim\in \{<,\leq,=,\geq,>\}$. \cite{alur1990model}
 	\begin{itemize}
 		\item $\langle s,\nu\rangle \models p$ gdw. $p\in \mu(s)$
 		\item $\langle s,\nu\rangle \models \varphi_1\land \varphi_2$ gdw. $s\models \varphi_1$ und $s\models \varphi_2$
@@ -157,87 +156,46 @@ Damit können wir bestimmen, wann eine Konfiguration eine $\TCTL$-Formel erfüll
 
 Wie man an diesem Beispiel erkennen konnte, ist das Auswerten von $\TCTL$-Formeln nicht trivial.
 Aus diesem Grund ist die algorithmische Betrachtung des Model-Checking Spiels für $\TCTL$ äußerst interessant und wird in \cite{alur1990model} sehr konkret besprochen.
-Da der vorgestellte Algorithmus aber um einiges komplexer ist, also die in Kapitel \ref{ChapMCAlgs} diskutierten, soll hier bloß die grobe Idee angemerkt werden.
-Es lässt sich feststellen, dass im Kontext des Model-Checkings zwei Zeitbelegungen $\nu$ und $\nu'$ äquivalent sind ($\nu \cong \nu'$), wenn die abgerundeten Ganzzahlwerte und die Reihenfolge der Nachkomma-Werte gleich sind.
-
-Formal verwenden wir $\lfloor x \rfloor$ für die größte ganze Zahl $y$ mit $y\leq x$ und $\operatorname{frac}(x)$ für $x-\lfloor x \rfloor$. Weiter sei für $x\in C$ der Wert $c_x\in \mathcal{N}$ definiert als $c_x\coloneqq \max\{c : c \leq x \text{ oder } x\leq c \text{ kommt in } \tau(e) \text{ vor}, e\in E \text{ bel.}\}$, also als größte Konstante, mit der $x$ verglichen wird.
-Dann gilt für $\nu,\nu'\in \Gamma(\mathfrak{S})$, dass $\nu \cong \nu'$ genau dann, wenn
-\begin{enumerate}
-	\item für alle $x\in C$ gilt, dass entweder $\lfloor \nu(x)\rfloor = \lfloor \nu'(x)\rfloor$ oder dann $\nu(x)$ und $\nu'(x)$ größer als $c_x$ sind und
-	\item für alle $x,y\in C$ mit $\nu(x)\leq c_x$ und $\nu(y)\leq c_y$ gilt, dass $\operatorname{fract}(\nu(x))\leq \operatorname{fract}(\nu(y))$ gdw. $\operatorname{fract}(\nu'(x))\leq \operatorname{fract}(\nu'(y))$. \cite{alur1990model}
-\end{enumerate}
-
-Damit lässt sich dann erkennen, dass für eine beliebige $\TCTL$-Formel $\varphi$ und zwei äquivalente $\nu,\nu'\in \Gamma(\mathfrak{S})$ gilt, dass $\langle s,\nu \rangle\models \varphi$ gdw. $\langle s,\nu'\rangle \models \varphi$. \cite{alur1990model}
-
-Betrachtet man nun die Äquivalenzklassen $\{[\nu] : \nu\in \Gamma(\mathfrak{S})\}$ der soeben definierten Äquivalenzrelation erhält man Mengen an Konfigurationen $\langle s,[\nu]\rangle$, welche wir Regionen nennen.
-Schlussendlich lässt sich der Model-Checking Algorithmus dann über Pfade dieser Regionen definieren. \cite{alur1990model}
-
-Der daraus resultierende Model-Checking Algorithmus hat eine Komplexität von 
+Der darin diskutierte Model-Checking Algorithmus hat dann eine Komplexität von 
 $$\mathcal{O}\left[c(\varphi)\cdot \vert\varphi\vert \cdot (|S|+|E|) \cdot |C|! \cdot \prod_{x\in C}c_x\right],$$ 
-wobei $c(\varphi)$ die größte in $\varphi$ vorkommende Konstante ist.
-Der Algorithmus wächst also linear in Formellänge als auch Graphengröße, aber wächst exponentiell mit der Anzahl an Uhren. \cite{alur1990model}
+wobei $c(\varphi)$ die größte in $\varphi$ vorkommende Konstante ist. \cite{alur1990model}
 
 Dies stellt eine sehr viel höhere Komplexität dar, als die in Kapitel \ref{ChapMCAlgs} vorgestellten Algorithmen.
 Zudem waren die $\PCTL$-Algorithmen nicht optimiert für $p\in \{0,1\}$, was hier ja aber der Fall ist.
 Offensichtlich ist die Art, wie $\PCTL$ Zeit implementiert sehr viel schwächer als $\TCTL$s Implementation, jedoch ist diese Steigerung an Aussagekraft auch sehr klar in der Model-Checking Komplexität erkennbar.
 Ein Ausweiten von $\TCTL$ bzw. zeitlichen Graphen auf Markov-Ketten würde zusätzliche Komplikationen hinzufügen.
-So würde es bspw. nicht mehr nur ausreichen, $\mathcal{T}$ von einer Kante abhängig zu machen.
-Da es in einem zeitlichen Graphen nicht möglich ist, Kanten zu verwenden, deren boolesche Formeln nicht erfüllt werden, würde die das Wahrscheinlichkeitsmaß in diesen Fällen $0$ sein müssen.
-Demnach wäre es nötig, $\mathcal{T}$ von der Kante, dem ausgehenden Knoten und einem zeitlichen Parameter abhängig zu machen.
+Wegen der Booleschen aus $\tau$ wäre es nötig, für jedes $n\in \mathcal{N}$ ein eigenes $\mathcal{T}_n:S\times S\to [0,1]$ zu definieren.
+Durch geeignetes Bestimmen von Äquivalenzklassen lässt sich die Anzahl der benötigten Funktionen zwar in den meisten Fällen verringern, im allgemeinen Fall wird aber mindestens die Platzkomplexität deutlich erhöht.
 
 Die Aussagekraft von $\TCTL$ ist im Vergleich aber um einiges höher.
 So lässt sich zum Beispiel Zeit genau so darstellen wie in $\PCTL$ indem eine Uhr $x$ verwendet wird, die bei jedem Zustandswechsel zurückgesetzt wird und indem wir $\tau(e)$ für alle $e$ neu definieren durch $\tau(e)\gets \tau(e) \land x\leq 1 \land 1\leq x$.
 Dadurch würde jede Transition nur bei $x=1$ genommen werden, wodurch das Verhalten, wie es $\PCTL$ bei Markov-Ketten voraussetzt implementiert wird.
 Offensichtlich lassen sich in $\TCTL$ aber auch weitere Verhalten darstellen.
-So könnte man bspw. bei einem Wechsel in einen Zustand für die ersten fünf Zeiteinheiten eine Menge an Kanten erlauben, nach den ersten fünf aber eine andere.
-In $\PCTL$ wäre solch ein Verhalten nicht möglich, für das modellieren von Systemen ist solch eine Eigenschaft aber äußerst hilfreich, da nach fünf Zeiteinheiten bspw. nur noch in verschiedene Fehlerzustände gewechselt werden könnte.
+Bspw. wäre es möglich unterschiedliche Nachbarn zu definieren, abhängig davon, wie lange sich bereits im aktuellen Zustand aufgehalten wurde.
 
 Es lässt sich also erkennen, dass $\PCTL$ trotz der, bzgl. Zeit, geringeren Aussagekraft auch Vorteile gegenüber $\TCTL$ bietet.
 Falls es aber wichtig ist starke Aussagen über das zeitliche Verhalten eines Systems zu formulieren, wäre $\TCTL$ vermutlich die bessere Wahl.
 
 
-\subsection{Generalized Probabalistic Logic}
+\subsection{Generalized-Probabilistic-Logic}
 
 Der \textit{modale $\mu$-Kalkül} ($\Lmu$) stellt eine sehr wichtige Fixpunktlogik für Korrektheitsverifikation dar.
 Das liegt daran, dass es möglich ist, die meisten für Model-Checking verwendeten Logiken in diese einzubetten. So lässt sich beispielsweise zu jeder $\CTL$- oder $\CTL^*$-Formel eine äquivalente $\Lmu$-Formel definieren.
 Zusätzlich lassen sich aber auch noch weitere Aussagen treffen, wie bspw. dass auf einem Pfad in jedem zweiten Zustand eine Bedingung gilt.
 Dies lässt sich weder in $\CTL$, noch $\CTL^*$ ausdrücken. \cite{cleaveland2005probabilistic}
+In diesem Kapitel wird die \textit{Generalized-Probabilistic-Logic} ($\GPL$) betrachtet, welche $\Lmu$ um Wahrscheinlichkeiten erweitert.
 
-Zu Beginn soll die Syntax und Semantik kurz definiert werden, für mehr Informationen wird dabei aber auf \cite{stirling1991local} und \cite{kozen1983results} verwiesen.
-\begin{definition}[Syntax und Semantik von $\Lmu$]
-	Die Menge der $\Lmu$-Formeln wird für Variablen $X$, atomare Aussagen $a$ und Aktionen $\alpha$ durch die folgende Grammatik definiert:
-	$$
-	\varphi \Coloneqq X \,|\, a \,|\, \neg a \,|\, \varphi \land \varphi \,|\, \varphi \lor \varphi \,|\, \langle \alpha\rangle \varphi \,|\, [\alpha]\varphi \,|\, \mu X.\varphi \,|\, \nu X.\varphi
-	$$
-	Variablen werden, wie aus $\FO$ bekannt, durch die Operatoren $\nu$ und $\mu$ gebunden und sind sonst frei.
-	Der Einfachheit halber sind freie Variablen im Weiteren nicht erlaubt.
-	
-	Für den modalen $\mu$-Kalkül benötigen wir eine etwas abgeänderte Art an Transitionssystem.
-	Sei $\mathsf{Act}$ eine Menge an Aktionen, $S$ eine Menge an Zuständen und $\mathsf{AP}$ eine Menge an atomaren Aussagen.
-	Dann ist $\mathcal{K}=(S,(E_\alpha)_{\alpha\in \mathsf{Act}}, \mathcal{L}:S\to 2^{\mathsf{AP}})$ ein wie vorher definiertes Transitionssystem mit dem Unterschied, dass für jedes $\alpha\in \mathsf{Act}$ eine einzelne Kantenrelation existiert.
-	Damit können wir die Semantik von $\Lmu$-Formeln als Modellbeziehung zwischen Zuständen $s\in S$ und Formeln induktiv definieren:
-	\begin{itemize}
-		\item $s\models a$ gdw. $a\in \mathcal{L}(s)$
-		\item $s\models \neg a$ gdw. $a\notin \mathcal{L}(s)$
-		\item $s\models \varphi_1\land\varphi_2$ gdw. $s\models \varphi_1$ und $s\models \varphi_2$
-		\item $s\models \varphi_1\lor\varphi_1$ gdw. $s\models \varphi_1$ oder $s\models \varphi_2$
-		\item $s\models \langle \alpha \rangle\varphi$ gdw. es ein $s'\in S$ mit $(s,s')\in E_\alpha$ gibt so, dass $s'\models \varphi$
-		\item $s\models [\alpha]\varphi$ gdw. für alle $s'\in S$ mit $(s,s')\in E_\alpha$, $s'\models \varphi$ gilt
-		\item $s\models \mu X.\varphi$ gdw. $s\in \operatorname{lfp}(F_\varphi)$
-		\item $s\models \nu X.\varphi$ gdw. $s\in \operatorname{gfp}(F_\varphi)$
-	\end{itemize}
-\end{definition}
+Aus Platzgründen wird $\Lmu$ hier nicht explizit definiert, für Informationen wird aber auf \cite{stirling1991local}, \cite{kozen1983results} und \cite{emerson1991real} verwiesen.
 
-Es lässt sich also ein ähnlicher Prozess wie bei $\PCTL$ erkennen.
-Für eine qualitative Logik, welche bloß aussagen kann, ob ein Zustand eine Spezifikation erfüllt, wird eine quantitative Erweiterung definiert, die genauere Aussagen über das spezifische Verhalten treffen kann.
-Bevor dies für $\Lmu$ aber passieren kann, werden noch einige Vorschritte benötigt.
+Bevor $\GPL$ definiert werden kann, müssen wir noch einige Strukturen und Funktionen betrachten.
+
 \begin{definition}[Reaktive-probabilistische-Transitionssysteme]
 	Sei $S$ eine abzählbare Menge an Zuständen, $\mathsf{Act}$ eine Menge an Aktionen und $\mathsf{AP}$ eine Menge an atomaren Aussagen.
 	Dann bezeichnen wir ein Tupel $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ als ein \textit{reaktives-probabilistisches-Transitionssystem} (RPLTS), wenn $\delta\subseteq S\times \mathsf{Act} \times S$ eine Übergangsrelation, $P:\delta\to (0,1]$ eine Transitions-Wahrscheinlichkeitsfunktion und $\mathcal{L}:S\to2^{\mathsf{AP}}$ eine Bezeichnungsfunktion ist.
 	Weiter muss für $P$ gelten, dass
 	\begin{enumerate}
-		\item Für alle $s\in S$ und alle $\alpha\in \mathsf{Act}$ gilt $\sum_{s' : (s,a,s')\in \delta} P(s,a,s')\in \{0,1\}$
-		\item Für alle $s\in S$ und alle $\alpha\in \mathsf{Act}$ gilt, wenn es ein $s'$ mit $(s,a,s')\in \delta$ gibt, dann ist $\sum_{s' : (s,a,s')\in \delta} P(s,a,s') = 1$ \cite{cleaveland2005probabilistic}
+		\item $\text{Für alle }s\in S\text{ und alle }\alpha\in \mathsf{Act}$ gilt $\sum_{s' : (s,a,s')\in \delta} P(s,a,s')\in \{0,1\}$
+		\item $\text{Für alle }s\in S\text{ und alle }\alpha\in \mathsf{Act}$ gilt, wenn es ein $s'$ mit $(s,a,s')\in \delta \text{ gibt, dann ist}$ $\sum_{s' : (s,a,s')\in \delta} P(s,a,s') = 1$ \cite{cleaveland2005probabilistic}
 	\end{enumerate}
 \end{definition}
 
@@ -271,8 +229,8 @@ Mit diesem Maß haben wir die Werkzeuge, um die Erweiterung von $\Lmu$ zu defini
 	Wie auch bei $\Lmu$ werden keine freien Variablen erlaubt.
 	Auch ist eine Alternation von Fixpunktoperatoren nicht zulässig.
 	
-	Intuitiv sollen von $\Phi$ erzeugte Formeln Zustandsformeln darstellen und sind schlussendlich auch $\GPL$-Formeln. Die von $\Psi$ erzeugten Formeln sind \fuzzy.
-	Dementsprechend stellt $\Phi$ die Menge aller Zustands- und $\Psi$ die Menge aller \fuzzy dar.
+	Intuitiv sollen von $\Phi$ erzeugte Formeln Zustandsformeln darstellen und sind schlussendlich auch $\GPL$-Formeln. Die von $\Psi$ erzeugten Formeln sind fusselige Formeln.
+	Dementsprechend stellt $\Phi$ die Menge aller Zustands- und $\Psi$ die Menge aller fusseligen Formeln dar.
 \end{definition}
 
 Um die Formeln nun auszuwerten, müssen wir zwischen $\Phi$ und $\Psi$ unterscheiden.
@@ -306,20 +264,18 @@ Mit dieser Funktion können wir nun die Semantik von $\GPL$ definieren.
 \end{definition}
 
 Damit haben wir $\GPL$ vollständig definiert und können die Logik an einem Beispiel betrachten.
-Zur Vereinfachung schreiben wir $\langle \cdot \rangle\psi\coloneqq \bigvee_{a\in\mathsf{Act}}\langle a\rangle \psi$ und $[\cdot]\psi \coloneqq \bigwedge_{a\in\mathsf{Act}}[a]\psi$.
 
 \begin{example}[Beispiel für $\GPL$]
 	Man betrachte den Graphen aus Abbildung \ref{RPLTS1}, welcher einen RPLTS darstellt. 
-	Als erstes Beispiel soll die \fuzzy $\psi_1\coloneqq \mu X. \mathsf{stop} \lor \langle\cdot\rangle X$ welche aussagt, dass es einen Pfad zu einem Knoten gibt, welcher mit $\mathsf{stop}$ annotiert ist.
+	Als erstes Beispiel soll die fusselige Formel $\psi_1\coloneqq \mu X. \mathsf{stop} \lor \langle a\rangle X$ betrachtet werden, welche aussagt, dass es einen Pfad zu einem Knoten gibt, welcher mit $\mathsf{stop}$ annotiert ist.
 	Da $A$ der Startzustand ist, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_1) = \{A\xrightarrow{a}B\xrightarrow{a}C\}$ und damit dann $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) = \left(\frac{1}{3}\right)^2=\frac{1}{9}$.
 	
 	Als zweites wollen wir nun noch die Wahrscheinlichkeit bestimmen, in einem mit $\mathsf{error}$ annotierten Zustand zu enden. 
-	Nehmen wir dafür die analoge Formel $\psi_2\coloneqq \mu X.\mathsf{error}\lor \langle \cdot \rangle X$.
+	Nehmen wir dafür die analoge Formel $\psi_2\coloneqq \mu X.\mathsf{error}\lor \langle a \rangle X$.
 	Da die maximalen d-Bäume betrachtet werden, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_2) = \{A\xrightarrow{a}D, A\xrightarrow{a}B\xrightarrow{a}D\}$ und daraus $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = \mu_\mathfrak{S}(A\xrightarrow{a}D) + \mu_\mathfrak{S}(A\xrightarrow{a}B\xrightarrow{a}D) = \frac{2}{3}+\frac{1}{3}\cdot\frac{2}{3}=\frac{8}{9}$.
 	
 	Es fällt also auf, dass $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) + \mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = 1$.
 	Es gibt demnach nur die Möglichkeiten in einem $\mathsf{error}$- oder einem $\mathsf{stop}$-Zustand zu enden.
-	Bei Betrachtung des RPLTS ist dies offensichtlich leicht einsehbar, wir haben dies nun aber auch mithilfe von $\GPL$ bewiesen.
 \end{example}
 
 \begin{figure}[h]
@@ -345,19 +301,19 @@ Zur Vereinfachung schreiben wir $\langle \cdot \rangle\psi\coloneqq \bigvee_{a\i
 \end{figure}
 
 Wir haben damit eine sehr interessante Logik kennengelernt.
-Zum Einen stellt die \glqq Basis-Logik\grqq{} $\Lmu$ eine sehr viel ausdrucksstärkere Logik dar als $\CTL$, was sich auch in der Einbettbarkeit von einigen probabilistischen Logiken, wie unter anderem $\mathsf{p}\CTL^*$ sehen lässt \cite{cleaveland2005probabilistic}.
+Zum Einen lassen sich einige sehr starke probabilistische Logiken wie bspw. $\mathsf{p}\text{-}\CTL^*$ darin einbetten \cite{cleaveland2005probabilistic}.
 Durch Wahl geeigneter Formeln wäre es demnach vermutlich auch möglich $\PCTL$ mit Voraussetzung $t=\infty$ in $\GPL$ einzubetten.
-Insgesamt stellt diese Erhöhung der Ausdruckskraft aber auch Nachteile dar.
+Zum Anderen stellt die höhere Ausdruckskraft aber auch Nachteile dar.
 So ist das Auswerten sehr viel aufwendiger und auch der in \cite{cleaveland2005probabilistic} vorgestellte Model-Checking Algorithmus benötigt einige Schritte mehr als der für $\PCTL$.
 Wir befinden uns also in einer ähnlichen Situation wie bei $\TCTL$.
 Jedoch gibt es dennoch den Unterschied, dass $\GPL$ mit zeitlichen Aspekten wie $\PCTL$ erweitert werden könnte, da bloß das Zählen der verwendeten Kanten nötig ist.
 Dies ließe sich bspw. durch das Kontrollieren der Baumlänge durchführen.
 Eine solche Erweiterung um, wie $\PCTL$, sowohl über Zeit als auch Wahrscheinlichkeiten aussagen zu treffen scheint also um einiges realistischer als für $\TCTL$.
 
-Zusätzlich sind die Aussagen, die $\GPL$ über Wahrscheinlichkeiten aufstellen kann sehr ähnlich zu denen von $\PCTL$, unter Anbetracht, dass $\GPL$ die deutlich mächtigere Logik ist.
-Dies liegt daran, dass beide Logiken die möglichen Pfade durchsuchen, um die Wahrscheinlichkeit des Erreichens von Regionen zu berechnen.
-Als Schnittstelle bieten beide Logiken auch die Möglichkeit eine Schwelle anzugeben, welche von einem Knoten erreicht bzw. überschritten werden muss, um die Formel zu erfüllen.
-Die beiden Logiken ähneln sich also sehr in dem Aspekt, wie diese Wahrscheinlichkeiten implementieren.
+$\GPL$ unterscheidet sich aber darin, dass der Mechanismus, wie Wahrscheinlichkeiten implementiert wurden der gleiche ist, wie in $\PCTL$.
+So werten beide Logiken Pfade aus und erhalten einen Wahrscheinlichkeitswert.
+Da sich Formeln beider Logiken aber auf Zustände beziehen, wird ein Operator bereitgestellt welcher eine Schwelle für den Wahrscheinlichkeitswert darstellt.
+$\PCTL$ mit $t=\infty$ stellt über $\CTL$ also die selbe Erweiterung wie $\GPL$ über $\Lmu$ dar.
 
 
 

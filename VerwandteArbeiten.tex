@@ -4,21 +4,17 @@ $\PCTL$ stellt als Beispiel der Logiken, die andere Logiken erweitern, eine sehr
 So sieht man bspw. in Kapitel noch andere Logiken, welche bestimmte Probleme lösen sollen, indem sie bereits etablierte um geeignete Fähigkeiten erweitern.
 In diesem Kapitel sollen einige solche Erweiterungen kurz vorgestellt werden.
 
-Eine Logik, welche die Zeitaspekte wie in $\PCTL$ implementiert ist die \textit{Real Time Computation Tree Logic} aus \cite{emerson1991quantitative}. 
+Eine Logik, welche die Zeitaspekte wie in $\PCTL$ implementiert ist die \textit{Real-Time-Computation-Tree-Logic} aus \cite{emerson1991quantitative}. 
 Diese erlaubt \text{Until}-Operatoren der Wart $\varphi_1 \operatorname{U}^{\leq k} \varphi_2$ mit der selben Bedeutung wie in $\PCTL$ für den Fall $p\in \{0,1\}$.
 Ein anderer sehr interessanter Ansatz ist aus \cite{jahanian1986safety}.
-Die dort definierte Logik \textit{Real Time Logic} stellt nämlich, anders als bisher alle Logiken in dieser Arbeit, keine modale Logik dar, und kann damit über eine Vielzahl an Eigenschaften aussagen treffen.
-Zum Beispiel ist es in einer nicht-modalen Fixpunktlogik, wie sie \textit{Real Time Logic} ist, möglich eine bestimmte Anzahl an verschiedenen Nachfolgern vorauszusetzen.
-Aus der Bisimulationsinvarianz von $\Lmu$ ergibt sich, dass dies für $\PCTL$ oder $\GPL$ nicht möglich ist.
+Die dort definierte Logik \textit{Real Time Logic} stellt nämlich, anders als bisher alle Logiken in dieser Arbeit, keine modale Logik dar, und kann damit über eine Vielzahl an Eigenschaften aussagen treffen, insbesondere über nicht-bisimulationsinvariante Eigenschaften.
 Auch äußerst Interessant ist die Logik $\leq\text{ }\omega\text{-}\Lmu$ aus \cite{emerson1991real}, welche $\Lmu$ mit Zeit erweitert.
 Dies wird dadurch erreicht, indem Fixpunktoperatoren mit natürlichen Zahlen ergänzt werden, welche darstellen, wie viele Iterationen der Fixpunktinduktion durchgeführt werden sollen.
-Dadurch lassen sich bspw. die Aussagen aus der \textit{Real Time Computation Tree Logic} auch in $\leq\text{ }\omega\text{-}\Lmu$ darstellen.
+Dadurch lassen sich bspw. die Aussagen aus der \textit{Real-Time-Computation-Tree-Logic} auch in $\leq\text{ }\omega\text{-}\Lmu$ darstellen.
 
 Auch im Aspekt Wahrscheinlichkeiten gibt es einige weitere Interessante Logiken. 
 In \cite{larsen1989bisimulation} werden bspw. drei Logiken mit aufsteigender Aussagekraft definiert.
-Was diese Interessant macht ist, dass diese Logiken durch ein Übersetzen in eine \glqq Testsprache\grqq{} ausgewertet werden.
-Zusätzlich werden dann mögliche Durchläufe des Tests durch das (nichtdeterministische) Programm definiert.
-Durch Anpassen der Anzahl an Durchläufen lässt sich dies so ausweiten, dass für einen beliebigen erlaubten Fehler das Programm auf Korrektheit getestet wird.
+Was diese Interessant macht ist, dass diese Logiken durch ein Übersetzen in eine \glqq Testsprache\grqq{} ausgewertet werden so, dass bloß eine Menge an möglichen Programmdurchläufen angegeben werden muss, um mit einem beliebig kleinen Fehler die Korrektheit zu testen.
 Betrachtet man die Logik aus \cite{courcoubetis1995complexity} fällt einem auf, dass das Gleichungssystem zum Berechnen des \textit{Until}-Operators das selbe ist, dass auch im Algorithmus für $\PCTL$ erzeugt wird.
 Es lässt sich dort also eine genauere Untersuchung der Eigenschaften von $\PCTL$ bzgl. der Wahrscheinlichkeitsaussagen finden.
 
