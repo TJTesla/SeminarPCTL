@@ -1,16 +1,16 @@
 \section{Einführung}
 
-In vielen Systemen sind zeitliche Bedingungen für das auftreten bestimmter Ereignisse wichtig.
+In vielen Systemen sind zeitliche Bedingungen für das Auftreten bestimmter Ereignisse wichtig.
 Betrachtet man bspw. einen Getränkeautomaten, so ist ein wichtiges Kriterium, dass nach dem Auswählen des Getränks möglichst wenig Zeit vergeht, bis dieses entnommen werden kann.
-Wird die dafür definierte Deadline aber verfehlt, so folgen keine katastrophalen Kosten.
+Wird die dafür definierte Deadline aber verfehlt, so folgen keine hohen Kosten.
 Das Einhalten einer Deadline sollte also erstrebt werden, ein Verfehlen aber nicht sofort zum Systemabsturz führen.
 Solche Systeme nennt man Soft-Realtime-Systeme.
 Im Gegensatz dazu nennt man Hard-Realtime-Systeme die, dessen Deadlines unter keinen Umständen verfehlt werden dürfen.
-Möchte man die Korrektheit solcher Systeme überprüfen, so ist es leicht einsehbar, dass das Verwerfen einer Formel bei nicht-Einhaltung einer Deadline sinnvoll ist, da es bei dieser Art an System vermieden werden muss Deadlines zu verfehlen.
+Möchte man die Korrektheit solcher Systeme überprüfen, so ist es leicht einsehbar, dass das Verwerfen einer Formel bei Nicht-Einhaltung einer Deadline sinnvoll ist, da es bei dieser Art an System vermieden werden muss, Deadlines zu verfehlen.
 Schwieriger wird solch eine Überlegung bei Soft-Realtime-Systemen.
 Das Einhalten von Deadlines sollte angestrebt werden, das Verpassen dieser ist aber in den meisten Fällen nicht sonderlich kritisch.
 Ein möglicher Weg dafür ist es, nicht nur über Zeit, sondern auch über Wahrscheinlichkeiten aussagen treffen zu können.
-Dadurch ist es dann möglich Aussagen der Form \glqq{}Eine Deadline wird in $95\%$ der Fälle eingehalten\grqq{} zu treffen.
+Dadurch ist es dann möglich, Aussagen der Form \glqq{}Eine Deadline wird in $95\%$ der Fälle eingehalten\grqq{} zu treffen.
 Die in dieser Arbeit diskutierte Logik ermöglicht genau solche Aussagen.
 Genauer geht es um \textit{Probabilistic-Computation-Tree-Logic} ($\PCTL$) von Hansson und Jonsson (\cite{hansson1994logic}).
 In dem Sinne soll die Logik untersucht werden, Model-Checking Algorithmen besprochen und dann mit weiteren Logiken verglichen werden.
@@ -19,7 +19,7 @@ Der Aufbau der Arbeit sieht wie folgt aus:
 In Kapitel \ref{ChapGrundlagen} sollen wichtige Grundlagen bzgl. $\CTL$ und Transitionssystemen besprochen werden, dadurch setzt die Arbeit keine Kenntnisse über temporale Logiken voraus.
 In Kapitel \ref{ChapSyntaxSemantik} wird dann $\PCTL$ besprochen.
 Dafür wird zuerst die Syntax, die dazugehörigen Strukturen und Semantik erklärt.
-Darauf werden die wichtigsten Model-Checking Algorithmen vorgestellt und und schließlich in einem Beispiel zur Verifikation angewendet.
+Darauf werden die wichtigsten Model-Checking Algorithmen vorgestellt und schließlich in einem Beispiel zur Verifikation angewendet.
 In Kapitel \ref{ChapVerwandt} werden zwei weitere Logiken vorgestellt, welche Aussagen über Zeit bzw. Wahrscheinlichkeiten treffen können.
 Beide sind bzgl. ihrer Domäne sehr mächtig und aus dem anschließenden Vergleich mit $\PCTL$ können wir wichtige Erkenntnisse ziehen.
 

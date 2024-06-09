@@ -3,7 +3,7 @@
 
 Da nun die Logik $\PCTL$ bekannt, ist sollen zwei alternative Ansätze bzw. Logiken diskutiert werden, die zeitliche Aspekte bzw. Wahrscheinlichkeiten hinzufügen.
 Dafür sollen zwei Logiken genauer betrachtet werden.
-Eine erweitert $\CTL$ durch ein komplexes System welches reelle Zeitwerte erlaubt und so sehr viel mehr über Zeit aussagen kann als $\PCTL$.
+Eine erweitert $\CTL$ durch ein komplexes System, welches reelle Zeitwerte erlaubt und so sehr viel mehr über Zeit aussagen kann als $\PCTL$.
 Die andere Logik stellt eine Erweiterung des modal $\mu$-Kalküls durch Wahrscheinlichkeiten dar.
 Diese ermöglicht es, ähnlich wie in $\PCTL$ auszusagen, dass eine Formel für mindestens bzw. mehr als $p\%$ der Fälle gilt.
 
@@ -13,7 +13,7 @@ In diesem Kapitel wird die in \cite{alur1990model} definierte Logik \textit{Time
 
 Die Logik $\TCTL$ stellt, ähnlich wie $\PCTL$, eine Möglichkeit zur Verfügung, um zeitliche Zusammenhänge auszudrücken.
 Während dies in $\PCTL$ aber nur mit diskreten Werten möglich ist, verwendet $\TCTL$ reelle Werte, wodurch sich Systeme potentiell besser beschreiben lassen.
-Da dies aber offensichtlicher weise komplexer, als bloß bei jeder verwendeten Transition einen Zähler zu erhöhen, wird eine neue Struktur benötigt, welche Systeme modellieren soll und über welchen $\TCTL$-Formeln ausgewertet werden.
+Da dies aber offensichtlich komplexer, als bloß bei jeder verwendeten Transition einen Zähler zu erhöhen, wird eine neue Struktur benötigt, welche Systeme modellieren soll und über welchen $\TCTL$-Formeln ausgewertet werden.
 Dafür definieren wir eine feste Menge $\mathcal{N}$, welche uns Werte für zeitliche Vergleiche in Formeln gibt.
 Der Einfachheit halber definieren wir hier $\mathcal{N}\coloneqq\{0,1,\dots\}=\mathbb{N}$, wegen $\vert\mathbb{N}\vert=\vert\mathbb{Q}\vert$ lässt sich aber natürlich auch $\mathcal{N}=\mathbb{Q}$ wählen. \cite{alur1990model}
 
@@ -62,8 +62,8 @@ Um diese Definition besser zu verstehen, soll ein Beispiel angeführt werden.
 	\end{itemize}
 	Dann lässt sich die graphische Darstellung von $\mathfrak{S}$ in Abbildung \ref{ZeitlicherGraph1} sehen\footnote{Die Formel $\top$ wird als Platzhalter für eine beliebige Tautologie wie zum Beispiel $x \geq 2 \lor \neg(x\geq 2)$ verwendet.}.
 	
-	Es lässt sich also sehen, dass die Uhr $x$ die zeit stoppt, die seit dem Letzten Fehler passiert ist, während die Uhr $y$ die Zeit misst, die seit der Letzten Wiederaufnahme des Betriebs des Systems vergangen ist.
-	Weiter gibt $\tau$ uns die Information, dass wenn ein Fehler auftritt, für zwei Zeiteinheiten der Fehler bestehen bleiben muss und die darauf folgende Fehlermeldung für mindestens drei Zeiteinheiten seit dem auftreten des Fehlers beibehalten wird.
+	Es lässt sich also sehen, dass die Uhr $x$ die Zeit stoppt, die seit dem letzten Fehler passiert ist, während die Uhr $y$ die Zeit misst, die seit der letzten Wiederaufnahme des Betriebs des Systems vergangen ist.
+	Weiter gibt $\tau$ uns die Information, dass wenn ein Fehler auftritt, für zwei Zeiteinheiten der Fehler bestehen bleiben muss und die darauf folgende Fehlermeldung für mindestens drei Zeiteinheiten seit dem Auftreten des Fehlers beibehalten wird.
 \end{example}
 
 \begin{figure}[h]
@@ -310,7 +310,7 @@ Jedoch gibt es dennoch den Unterschied, dass $\GPL$ mit zeitlichen Aspekten wie 
 Dies ließe sich bspw. durch das Kontrollieren der Baumlänge durchführen.
 Eine solche Erweiterung um, wie $\PCTL$, sowohl über Zeit als auch Wahrscheinlichkeiten aussagen zu treffen scheint also um einiges realistischer als für $\TCTL$.
 
-$\GPL$ unterscheidet sich aber darin, dass der Mechanismus, wie Wahrscheinlichkeiten implementiert wurden der gleiche ist, wie in $\PCTL$.
+$\GPL$ unterscheidet sich aber darin, dass der Mechanismus, wie Wahrscheinlichkeiten implementiert wurden, der gleiche ist, wie in $\PCTL$.
 So werten beide Logiken Pfade aus und erhalten einen Wahrscheinlichkeitswert.
 Da sich Formeln beider Logiken aber auf Zustände beziehen, wird ein Operator bereitgestellt welcher eine Schwelle für den Wahrscheinlichkeitswert darstellt.
 $\PCTL$ mit $t=\infty$ stellt über $\CTL$ also die selbe Erweiterung wie $\GPL$ über $\Lmu$ dar.

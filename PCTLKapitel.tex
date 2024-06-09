@@ -4,23 +4,24 @@
 % Dieses Kapitel stellt das Hauptkapitel der Arbeit dar und soll die Syntax und Semantik von $\PCTL$ erläutern, sowie mithilfe von eigenen Beispielen diese Verständlicher machen. Offensichtliche verwende ich in dem gesamten Kapitel hauptsächlich \cite{hansson1994logic} für Informationen, Algorithmen und Beweise, die Beispiele werden aber zum Großteil eigene sein.
 
 Wie in Kapitel \ref{ChapGrundlagen} gezeigt, lassen sich mithilfe von $\CTL$ viele interessante Eigenschaften von nicht-deterministischen System beschreiben. 
-Jedoch gibt es auch Anwendungsfälle, in denen mehr Ausdruckskraft benötigt wird, als ein All- und Existenzquantor liefern können.
-Ein Gebiet in dem dies stark auffällt sind Soft-Realtime-Systeme, wie sie in der Einführung definiert wurden. 
+Jedoch gibt es auch Anwendungsfälle, in denen mehr Ausdruckskraft benötigt wird, als klassische Quantoren liefern können.
+Ein Gebiet, in dem dies stark auffällt sind Soft-Realtime-Systeme, wie sie in der Einführung definiert wurden. 
 Um eben solche Systeme gut beschreiben zu können, benötigt man zwei weitere Aspekte:
 \begin{enumerate}
-	\item Um die Zeitschranken zu formulieren wird ein Konzept von Zeit benötigt. Dieses soll aussagen können, dass zwei Ereignisse eine bestimmte Zeitspanne $t$ voneinander entfernt sind.
-	\item Da aber das Verfehlen einer Zeitschranke nicht unbedingt zum Verwerfen einer Formel führen soll, werden zusätzlich Wahrscheinlichkeiten benötigt. 
-	Da in Soft-Realtime-Systemen das Überschreiten einer Deadline zwar nicht direkt verboten ist, aber im Allgemeinen vermieden werden sollte, ist es sinnvoll über die Wahrscheinlichkeit eines Ereignisses Aussagen zu treffen.
+	\item Um die Zeitschranken zu formulieren, wird ein Konzept von Zeit benötigt. Dieses soll aussagen können, dass zwei Ereignisse eine bestimmte Zeitspanne $t$ voneinander entfernt sind.
+	\item Wie bereits erwähnt führt das Verfehlen einer Deadline nicht direkt zum Verwerfen der Formel. Daher benötigt man eine Möglichkeit, zu relativieren, um das Verfehlen bis zu einem gewissen Grad zu erlauben. 
+	Dies lässt sich mithilfe von Wahrscheinlichkeiten machen. 
 \end{enumerate}
-Kombiniert man diese Aspekte lassen sich Eigenschaften wie \glqq Nach Ereignis X passiert innerhalb von 15 Zeiteinheiten mit Wahrscheinlichkeit 90\% Ereignis Y\grqq{} oder \glqq Ereignis A tritt mit einer Wahrscheinlichkeit von 90\% in 10 und mit 95\% in 20 Zeitschritten auf\grqq. 
-Eine Logik, die eben diese Erweiterungen von $\CTL$ sinnvoll implementiert ist die Logik \text{Probabilistic-Computation-Tree-Logic} ($\PCTL$). 
+Kombiniert man diese Aspekte, lassen sich Eigenschaften wie \glqq Nach Ereignis X passiert innerhalb von 15 Zeiteinheiten mit Wahrscheinlichkeit 90\% Ereignis Y\grqq{} oder \glqq Ereignis A tritt mit einer Wahrscheinlichkeit von 90\% in 10 und mit 95\% in 20 Zeitschritten auf\grqq formulieren. 
+Eine Logik, die eben diese Erweiterungen von $\CTL$ sinnvoll implementiert, ist die Logik \text{Probabilistic-Computation-Tree-Logic} ($\PCTL$). 
 Sinnvoll bedeutet hier, dass es einen Model-Checking Algorithmus mit polynomieller Laufzeit gibt. 
+
 In diesem Kapitel soll zuerst die Syntax von $\PCTL$ erläutert und danach die dazugehörige Semantik aufgezeigt werden, um dann zwei verschiedene Ansätze für das Model Checking von $\PCTL$ mit Transitionssystemen zu zeigen. 
 Im Anschluss sollen die kennengelernten Konzepte der Logik sowie des Model Checkings an einem Beispiel erläutert werden.
 
 \subsection{Syntax und Semantik von $\PCTL$}
 
-Um \textit{Probabilistic-Computation-Tree-Logic} ($\PCTL$) zu verstehen, soll hier die Syntax, die Modelle welche wir zum Auswerten verwenden, sowie die Semantik der Logik erläutert werden.
+Um \textit{Probabilistic-Computation-Tree-Logic} ($\PCTL$) zu verstehen, soll hier die Syntax, die Modelle, welche wir zum Auswerten verwenden, sowie die Semantik der Logik erläutert werden.
 
 Wie auch für $\CTL$ können wir die Syntax von  $\PCTL$ mithilfe folgender rekursiver Regeln definieren:
 \begin{definition}[Syntax von $\PCTL$]
@@ -43,7 +44,7 @@ Mit diesen Regeln können wir einige $\PCTL$-Formeln aufstellen.
 	Inkorrekt gebildete Formeln wären zum Beispiel $$\neg(X \land \neg(\UEqual{\top}{15}{90\%}{})) \text{ und } (\UEqual{A}{10}{90\%}{B})(\UStrict{A}{20}{95\%}{B}).$$
 \end{example}
 
-Ähnlich, wie wir Transitionssysteme definiert haben, um diese als Modelle von $\CTL$-Formeln zu verwenden, wollen wir nun sogenannte Markov-Ketten definieren, um Eigenschaften von diesen mithilfe von $\PCTL$ zu formulieren.
+Ähnlich wie wir Transitionssysteme definiert haben, um diese als Modelle von $\CTL$-Formeln zu verwenden, wollen wir sogenannte Markov-Ketten definieren, um Eigenschaften von diesen mithilfe von $\PCTL$ zu formulieren.
 
 \begin{definition}[Markov-Ketten]
 	Sei $S$ eine endliche Menge, $s_i\in S$ und $\mathcal{L}:S\to 2^\mathsf{AP}$ sowie $\mathcal{T}:S\times S \to [0,1]$ Funktionen so, dass für alle $s\in S$ gilt: $\sum_{s'\in S}\mathcal{T}(s,s')=1$.
@@ -55,15 +56,16 @@ Mit diesen Regeln können wir einige $\PCTL$-Formeln aufstellen.
 	\cite{hansson1994logic}
 \end{definition}
 
-Zur Einfachheit sagen wir, dass vom Knoten $s$ zum Knoten $s'$ genau dann eine Kante existiert, wenn $\mathcal{T}(s, s') \neq 0$.
+Zur Vereinfachung sagen wir, dass vom Knoten $s$ zum Knoten $s'$ genau dann eine Kante existiert, wenn $\mathcal{T}(s, s') \neq 0$.
 Man erkennt, dass im Allgemeinen ein Pfad $\sigma\in \paths{\mathfrak{S}}{s_0}$ unendlich lang ist. 
 Dies ist wohldefiniert, da jeder Zustand eine ausgehende Kante haben muss. Durch die an $\mathcal{T}$ geforderte Eigenschaft ist dies offensichtlich wohldefiniert.
 
 Eine Markov Kette ist also ein gerichteter, gewichteter Graph, wobei die Gewichtung der Kanten angibt, wie wahrscheinlich es ist, eine bestimmte Kante auszuwählen. Zusätzlich soll die Summe aller Gewichte der ausgehenden Kanten eines Knotens immer gleich eins sein. Damit ist auch gewährleistet, dass es keine isolierten Knoten gibt.
 
 Im Kontext von Systemen sollen die Zustände des Graphens Zustände des Systems beschreiben. 
-Die Kanten stellen die möglichen Folgezustände des Systems dar, wobei der Wechsel in einen Folgezustand mit der Wahrscheinlichkeit durchgeführt wird, mit der die Kante annotiert ist. 
-In jedem Zustand gelten atomare Aussagen, welche die Zustände beschreiben, diese werden von der Funktion $\mathcal{L}$ zugewiesen.
+Die Nachbarn eines Knotens stellen die möglichen Folgezustände des Systems dar, wobei der Wechsel in einen Folgezustand mit der Wahrscheinlichkeit durchgeführt wird, mit der die Kante annotiert ist. 
+In jedem Zustand gelten atomare Aussagen, welche die Zustände beschreiben.
+Diese werden von der Funktion $\mathcal{L}$ zugewiesen.
 
 Betrachten wir eine Markov-Kette als Beispiel:
 \begin{example}[Beispiel einer Markov-Kette]
@@ -110,7 +112,7 @@ Bevor wir die Semantik von $\PCTL$-Formeln für Markov-Ketten formal definieren 
 \begin{definition}[Wahrscheinlichkeitsmaß]
 	Sei $\pi = s_0\dots s_n$ eine Folge an Zuständen einer Markov-Kette $\mathfrak{S}$ und $X=\{\sigma\in \paths{\mathfrak{s}}{s_0} : \sigma\uparrow n = \pi\}$ die Menge aller (unendlichen) Pfade, die mit dieser Folge beginnen. Wir definieren dann das Wahrscheinlichkeitsmaß 
 	$$\mu^{\mathfrak{S}}_{s_0}(X)\coloneqq\mathcal{T}(s_0,s_1)\cdot \mathcal{T}(s_1,s_2)\cdot \ldots \cdot \mathcal{T}(s_{n-1},s_n),$$
-	als das Produkt der Kanten zwischen den Zustände der Folge. \cite{hansson1994logic}
+	als das Produkt der Kanten zwischen den Zuständen der Folge. \cite{hansson1994logic}
 \end{definition}
 
 Weiter ergeben sich einige Gleichheiten \cite{hansson1994logic}:
@@ -123,10 +125,10 @@ Weiter ergeben sich einige Gleichheiten \cite{hansson1994logic}:
 	\begin{equation}\mu^\mathfrak{S}_{s_0}(\paths{\mathfrak{S}}{s_0} \setminus X) = 1-\mu^\mathfrak{S}_{s_0}(X).\label{MassUmkehrung}\end{equation}
 \end{itemize}
 
-Betrachten wir zum verdeutlichen ein paar Beispiele.
+Um dies zu verdeutlichen sollen einige Beispiele betrachtet werden.
 \begin{example}[Wahrscheinlichkeitsmaße]
 	Der Einfachheit halber verwenden wir wieder die Markov-Kette aus Abbildung \ref{MarkovGraph1}. Sei $\pi=s_0s_1s_0s_2$. 
-	Dann ist $X=\{\sigma \in \paths{\mathfrak{S}}{s_1} : \sigma\uparrow 3 = \pi\}$ die Menge der Pfade, die durch folgenden Ausdruck dargestellt werden: $s_0s_1s_0(s_2)^\omega$ und es folgt
+	Dann ist $X=\{\sigma \in \paths{\mathfrak{S}}{s_1} : \sigma\uparrow 3 = \pi\}$ die Menge der Pfade, die durch den folgenden Ausdruck dargestellt werden: $s_0s_1s_0(s_2)^\omega$ und es folgt
 	$$\mu^\mathfrak{S}_{s_0}(X)=\mathcal{T}(s_0,s_1) \cdot \mathcal{T}(s_1,s_0) \cdot \mathcal{T}(s_0,s_2) = 0.7 \cdot 0.8 \cdot 0.3 = 0.168$$
 	
 	Als zweites Beispiel wollen wir alle Pfade betrachten, die dem Ausdruck $s_0(s_1s_0)^\ast s_2$ entsprechen. Also alle Pfade, die endlich oft zwischen $s_0$ nach $s_1$ und wieder zurück wechseln und dann in $s_2$ enden. Es gilt:
@@ -139,12 +141,16 @@ Betrachten wir zum verdeutlichen ein paar Beispiele.
 		&= 0.3 \cdot \frac{1}{1-0.56} \approx 0,6818
 	\end{align*}
 	
-	Zuletzt soll ausgerechnet werden wie hoch die Wahrscheinlichkeit ist, niemals $s_2$ zu erreichen. 
-	Dies sind die genau die Pfade, die nur zwischen $s_0$ und $s_1$ hin-und-her wechseln. 
-	Ein alternativer Weg ist es, das Wahrscheinlichkeitsmaß der Pfade zu berechnen, die endlich oft zwischen $s_0$ und $s_1$ wechseln und dann von $s_1$ aus in $s_2$ enden, also dem Ausdruck $s_0s_1(s_0s_1)^\ast s_2$ entsprechen. Die Berechnung verläuft analog zu dem eben vorgeführten Beispiel. Das Ergebnis ist dann $0.14\cdot\frac{1}{1-0.56} \approx 0.3182$. Es fällt auf, dass die Summe der letzten beiden Werte $1$ ist. Fasst meine beide Berechnungen zusammen erhält man demnach, dass die Wahrscheinlichkeit endlich oft zwischen $s_0$ und $s_1$ zu wechseln und irgendwie in $s_2$ zu enden gleich $1$ ist. Mit Gleichung \ref{MassUmkehrung} ist die Wahrscheinlichkeit nie in $s_2$ zu enden also $0$.
+	Zuletzt soll ausgerechnet werden, wie hoch die Wahrscheinlichkeit ist, niemals $s_2$ zu erreichen. 
+	Dies sind genau die Pfade, die nur zwischen $s_0$ und $s_1$ hin-und-her wechseln. 
+	Ein alternativer Weg ist es, das Wahrscheinlichkeitsmaß der Pfade zu berechnen, die endlich oft zwischen $s_0$ und $s_1$ wechseln und dann von $s_1$ aus in $s_2$ enden, also dem Ausdruck $s_0s_1(s_0s_1)^\ast s_2$ entsprechen. 
+	Die Berechnung verläuft analog zu dem eben vorgeführten Beispiel. 
+	Das Ergebnis ist dann $0.14\cdot\frac{1}{1-0.56} \approx 0.3182$. Es fällt auf, dass die Summe der letzten beiden Werte $1$ ist. 
+	Fasst man beide Berechnungen zusammen, erhält man demnach, dass die Wahrscheinlichkeit endlich oft zwischen $s_0$ und $s_1$ zu wechseln und irgendwie in $s_2$ zu enden gleich $1$ ist. Mit Gleichung \ref{MassUmkehrung} ist die Wahrscheinlichkeit nie in $s_2$ zu enden also $0$.
 \end{example}
 
-Nun können wir die Semantik von $\PCTL$ definieren. Genauer definieren wir eine Relation $\models_\mathfrak{S}$ für eine Markov-Kette $\mathfrak{S}=(S,s_i,\mathcal{T},\mathcal{L})$, ein $s\in S$ und eine $\PCTL$-Formel $\varphi$. Zur Vereinfachung definieren wir noch die Relation $\sttstile{}{}_\mathfrak{S} \subseteq \paths{\mathfrak{S}}{s} \times X$, wobei $X$ die Menge der Ausdrücke von der Form $\varphi_1 \operatorname{U}^{\leq t}\varphi_2$ mit $\varphi_1,\varphi_2 \in \PCTL, t\in \mathbb{N}$ ist.  
+Nun können wir die Semantik von $\PCTL$ definieren. Genauer definieren wir eine Relation $\models_\mathfrak{S}$ für eine Markov-Kette $\mathfrak{S}=(S,s_i,\mathcal{T},\mathcal{L})$, ein $s\in S$ und eine $\PCTL$-Formel $\varphi$. 
+Zur Vereinfachung definieren wir noch die Relation $\sttstile{}{}_\mathfrak{S} \subseteq \paths{\mathfrak{S}}{s} \times X$, wobei $X$ die Menge der Ausdrücke von der Form $\varphi_1 \operatorname{U}^{\leq t}\varphi_2$ mit $\varphi_1,\varphi_2 \in \PCTL, t\in \mathbb{N}$ ist.  
 
 \begin{definition}[Semantik von $\PCTL$ auf Markov-Ketten]
 	Sei $\mathfrak{S}=(S,s_i,\mathcal{T},\mathcal{L})$ eine Markov-Kette und $s_0\in S$. Dann lässt sich die Semantik für $\PCTL$-Formeln induktiv definieren \cite{hansson1994logic}:
@@ -207,8 +213,8 @@ Nun können wir Ausdrücke formulieren, die interessante Eigenschaften von Syste
 	
 	Für ein paar weitere Beispiele und Erkenntnisse soll die Markov-Kette $\mathfrak{S}=(\{s_0, s_1,s_2\}, s_0, \mathcal{T},\mathcal{L})$ aus Abbildung \ref{MarkovGraph1} betrachtet werden.
 	Um Wahrscheinlichkeitsmaße zu erläutern, wurden zwei interessante Maße berechnet. 
-	Zum Einen die Wahrscheinlichkeit, dass von $s_0$ irgendwann zu $s_2$ gewechselt wird, und die analoge Wahrscheinlichkeit für den Wechsel zu $s_2$ von $s_1$ aus. 
-	Es fällt auf, dass die Summe der Wahrscheinlichkeiten $1$, die Wahrscheinlichkeit, nie $s_2$ zu erreichen, ist also $0$.
+	Zum Einen die Wahrscheinlichkeit, dass von $s_0$ irgendwann zu $s_2$ gewechselt wird, und die analoge Wahrscheinlichkeit für den Wechsel von $s_1$ nach $s_2$ aus. 
+	Es fällt auf, dass die Summe der Wahrscheinlichkeiten $1$ beträgt. Die Wahrscheinlichkeit, nie $s_2$ zu erreichen, ist also $0$.
 	Es folgt also $s_0\models_\mathfrak{S} \neg\operatorname{EG}A$ bzw. $s_0\models_\mathfrak{S} \Arrow{A}{\infty}{1}{C}$.
 \end{example}
 
@@ -219,7 +225,7 @@ Da wir nun vertraut mit der Funktionsweise von $\PCTL$ sind, wollen wir das algo
 
 Ein wichtiges Anwendungsgebiet für temporale Logiken wie $\CTL$ und $\PCTL$ ist die Verifikation von Systemen. 
 Bei diesem erhält man eine Struktur $\mathfrak{S}$ (im Fall von $\PCTL$ eine Markov-Kette) und eine $\PCTL$-Formel $\varphi$, welche das gewünschte Verhalten eines Systems beschreibt. 
-Nun überprüft man ob $\mathfrak{S}\models \varphi$ gilt und falls dies der Fall ist, wurde somit gezeigt, dass das durch $\mathfrak{S}$ modellierte System sich korrekt verhält.
+Nun überprüft man, ob $\mathfrak{S}\models \varphi$ gilt und falls dies der Fall ist, wurde somit gezeigt, dass sich das durch $\mathfrak{S}$ modellierte System korrekt verhält.
 Da komplexe Systeme aber nur durch sehr große Strukturen modelliert werden können und kompliziertes Verhalten auch nicht mit kurzen Formeln dargestellt werden kann, ist es sinnvoll dieses Modellierungsproblem zu automatisieren, indem man Model Checking Algorithmen entwickelt. 
 Die Algorithmen aus \cite{hansson1994logic} sollen demnach in diesem Kapitel vorgestellt werden.
 
@@ -235,7 +241,8 @@ Am Anfang des Algorithmus wird $\operatorname{label}(s)\coloneqq\mathcal{L}(s)\c
 Da nach Definition \ref{SyntaxPCTL} zu jeder $\PCTL$-Formel eine äquivalente Formel gebildet werden kann, die nur die obigen Operatoren verwendet, fehlt nur noch zu zeigen, wann $\operatorname{label}(s)$ angepasst wird, im Fall der temporalen Operatoren. \cite{hansson1994logic}
 
 Zur Vereinfachung teilen wir den Fall der temporalen Operatoren in drei Fälle auf, abhängig vom Parameter $t$. Die drei Fälle sind $t=0$, $0<t<\infty$ und $t=\infty$.
-Der Fall $t=0$ ist trivial, da sich dann $s \models \UEqual{\varphi_1}{0}{p}{\varphi_2}$ offensichtlich zu $s \models \varphi_2$ vereinfachen lässt (und analog für $\UStrict{}{0}{p}{}$).
+Der Fall $t=0$ ist trivial, da sich dann $s \models \UEqual{\varphi_1}{0}{p}{\varphi_2}$ offensichtlich zu $s \models \varphi_2$ vereinfachen lässt (und analog für $\UStrict{}{0}{p}{}$), falls $p\neq0$.
+Für $p=0$ lässt sich $s\models \UEqual{\varphi_1}{t}{0}{\varphi_2}$ zu $s\models \top$ zusammenfassen, für beliebige $t$, also insbesondere auch $t=0$.
 Die anderen beiden Fälle sollen nun aber weiter betrachtet werden, beginnend mit $0<t<\infty$.
 
 Sei $\varphi \coloneqq \UEqual{\varphi_1}{t}{p}{\varphi_2}$, $0<t<\infty$ und die Zustände in denen $\varphi_1$ und $\varphi_2$ gelten wurden bereits bestimmt. 
@@ -286,7 +293,7 @@ Dies liefert unmittelbar Algorithmus \ref{RekGleichungAlg} zum Berechnen von $\m
 	\end{algorithmic}
 \end{algorithm}
 
-Ein anderer Ansatz zum berechnen von $\mathcal{P}$ lässt sich mithilfe von Matrizen finden. 
+Ein anderer Ansatz zum Berechnen von $\mathcal{P}$ lässt sich mithilfe von Matrizen finden. 
 Dafür partitionieren wir die Zustandsmenge $S=\{s_1,\dots,s_n\}$ in drei Teilmengen $S_s$, $S_f$ und $S_i$ mit den Bedeutungen, dass in $S_s$ die Erfolgszustände sind, anfangs also die $s\in S$ mit $\varphi_2\in \operatorname{label}(s)$, $S_f$ sind die abgelehnten Zustände, also die $s\in S$ mit $\varphi_1,\varphi_2 \notin \operatorname{label}(s)$. 
 $S_i$ sind die restlichen Zustände über die noch keine Aussage getroffen werden kann, genauer also die $s\in S$, mit $\varphi_1\in \operatorname{label}(s)$ und $\varphi_2\notin \operatorname{label}(s)$. \cite{hansson1994logic}
 
@@ -322,21 +329,22 @@ Diese Gleichung liefert direkt Algorithmus \ref{MatrixAlg} zum Berechnen von $\m
 \end{algorithm}
 
 Damit haben wir nun zwei Algorithmen für das Berechnen von Wahrscheinlichkeiten in Bezug auf $\UEqual{}{t}{p}{}$ (bzw. $\UStrict{}{t}{p}{}$). 
-Betrachten wir arithmetische Operationen fällt auf, dass Algorithmus \ref{RekGleichungAlg} eine Zeitkomplexität von $\mathcal{O}(t \cdot \vert S \vert^2)$ bzw. falls $\vert E \vert$ die Anzahl der Transitionen in $\mathcal{T}$ mit einem Wert größer $0$ sind von $\mathcal{O}(t\cdot (\vert S \vert + \vert E \vert))$. 
+Betrachten wir arithmetische Operationen fällt auf, dass Algorithmus \ref{RekGleichungAlg} eine Zeitkomplexität von $\mathcal{O}(t \cdot \vert S \vert^2)$ bzw. falls $\vert E \vert$ die Anzahl der Transitionen in $\mathcal{T}$ mit einem Wert größer $0$ ist von $\mathcal{O}(t\cdot (\vert S \vert + \vert E \vert))$. 
 Da zum Berechnen von $M^t$ insgesamt $\log t$ Matrixmultiplikationen benötigt werden, welche jeweils in $\mathcal{O}(\vert S \vert^3)$ sind, ergibt sich für Algorithmus \ref{MatrixAlg} eine Zeitkomplexität von $\mathcal{O}(\log t \cdot \vert S \vert ^3)$. 
-Es folgt, dass bei großen Werten für $t$, Algorithmus \ref{MatrixAlg} sehr viel effizienter ist, während bei kleinen $t$ aber sehr vielen Zuständen \ref{RekGleichungAlg} schneller ist. \cite{hansson1994logic}
+Es folgt, dass bei großen Werten für $t$, Algorithmus \ref{MatrixAlg} sehr viel effizienter ist, während bei kleinen $t$ und vielen Zuständen \ref{RekGleichungAlg} schneller ist. \cite{hansson1994logic}
 
 % TODO: Falls noch Platz: Platzkomplexität (O(t * |S|) vs O(|S|^2)?)
 
 % Algorithmus für t=infty
-Falls $t=\infty$ ergeben sich für beide bisher vorgestellten Algorithmen einige Probleme, da Algorithmus \ref{RekGleichungAlg} nicht terminieren würde und $M^t$ im Algorithmus \ref{MatrixAlg} nicht definiert ist.
+Falls $t=\infty$, ergeben sich für beide bisher vorgestellten Algorithmen einige Probleme. Algorithmus \ref{RekGleichungAlg} würde nicht terminieren und $M^t$ im Algorithmus \ref{MatrixAlg} wäre nicht definiert.
 Daher müssen wir die Algorithmen anpassen. Betrachten wir die Partitionierung von $S$, welche wir zur Definition der Matrix $M$ verwendet haben. 
 Sei nun $R$ die Menge der Erfolgszustände, also die, in denen $\varphi_2$ gilt. 
-Um die abgelehnten Zustände zu identifizieren reicht es nun nicht mehr nur die betrachten, in denen $\varphi_1$ nicht gilt, da ein noch unentschiedener Zustand in $S_i$, von dem kein Erfolgszustand erreichbar ist auch abgelehnt werden muss.
+Um die abgelehnten Zustände zu identifizieren reicht es nun nicht mehr nur die $s\in S$ zu betrachten, mit $s\not\models \varphi_1$, da $s$ auch dann abgelehnt werden muss, wenn kein Erfolgszustand von $s$ aus erreichbar ist.
 Dies liefert uns die Definition der Menge $Q$ als die Knoten, in denen $\varphi_1$ nicht gilt oder denen, in denen $\varphi_1$ gilt, $\varphi_2$ nicht gilt und von denen kein Knoten in $R$ erreichbar ist.
-Die restlichen Knoten, in denen $\varphi_1$ gilt, $\varphi_2$ nicht gilt und von denen ein Knoten in $R$ erreichbar ist befinden sich wieder in der Menge $S$. \cite{hansson1994logic}
+Die restlichen Knoten, in denen $\varphi_1$ gilt, $\varphi_2$ nicht gilt und von denen ein Knoten in $R$ erreichbar ist, befinden sich wieder in der Menge $S$. \cite{hansson1994logic}
 
-Da $R$ einfach zu bestimmen ist und auch $S_i$ direkt aus den Definitionen von $R$ und $Q$ folgt benötigen wir einen Algorithmus zum identifizieren von $Q$. Algorithmus \ref{IdentifyQ} erreicht genau das, wobei er die Knotenmengen $S_s$ und $S_i$ aus Algorithmus \ref{MatrixAlg} verwendet.
+Da $R$ einfach zu bestimmen ist und auch $S_i$ direkt aus den Definitionen von $R$ und $Q$ folgt, benötigen wir einen Algorithmus zum Identifizieren von $Q$. 
+Algorithmus \ref{IdentifyQ} erreicht genau das, wobei er die Knotenmengen $S_s$ und $S_i$ aus Algorithmus \ref{MatrixAlg} verwendet.
 
 \begin{algorithm}[h]
 	\caption{Algorithmus zum Bestimmen von $Q$ \cite{hansson1994logic}}
@@ -365,11 +373,11 @@ Nun können wir, ähnlich zur Gleichung \ref{RekGleichung}, eine Rekursionsgleic
 		\sum_{s'\in S} \mathcal{T}(s,s')\cdot \mathcal{P}(\infty, s') & \text{sonst}
 	\end{cases}
 \end{equation}
-Betrachtet man $\mathcal{P}(\infty, s)$ bildet sich ein Gleichungssystem mit $\vert S \vert$ unbekannten. Dieses lässt sich mithilfe des Gaußschen Eliminierungsverfahren mit einem Zeitaufwand von $\mathcal{O}((\vert S \vert - \vert Q \vert - \vert R \vert)^2.81)$ berechnen. \cite{hansson1994logic}
+Betrachtet man $\mathcal{P}(\infty, s)$ bildet sich ein Gleichungssystem mit $\vert S \vert$ unbekannten. Dieses lässt sich mithilfe des Gaußschen Eliminierungsverfahren mit einem Zeitaufwand von $\mathcal{O}((\vert S \vert - \vert Q \vert - \vert R \vert)^{2.81})$ berechnen. \cite{hansson1994logic}
 
 % Korrektes Auswählen von Fall 1, 2 oder 3
 Somit haben wir für die drei Fälle ein Verfahren, um die Modellbeziehung zu berechnen. Sei $\varphi = \UEqual{\varphi_1}{t}{p}{\varphi_2}$ (bzw. $\varphi = \UStrict{\varphi_1}{t}{p}{\varphi_2}$) und $\varphi_1$, sowie $\varphi_2$ wurden bereits betrachtet.
-Nun befinden wir uns in einem der drei Fälle. Gehe für jedes $s\in S$ diese durch und aktualisiere $\operatorname{label}(s)$:
+Also befinden wir uns in einem der drei Fälle. Gehe für jedes $s\in S$ diese durch und aktualisiere $\operatorname{label}(s)$:
 \begin{itemize}
 	\item Falls $t=0$: Setze $\operatorname{label}(s) = \operatorname{label}(s)\cup \{\varphi\}$, wenn $\varphi_2\in \operatorname{label}(s)$.
 	
@@ -378,7 +386,7 @@ Nun befinden wir uns in einem der drei Fälle. Gehe für jedes $s\in S$ diese du
 	
 	\item Falls $t=\infty$: Löse das durch $\{\mathcal{P}(\infty,s) : s\in S\}$ definierte Gleichungssystem und setze $\operatorname{label}(s) = \operatorname{label}(s)\cup \{\varphi\}$, wenn $\mathcal{P}(\infty,s) \geq p$ (bzw. $\mathcal{P}(\infty,s) > p$).
 \end{itemize}
-Somit haben wir die Induktion vom Anfang des Kapitels beendet und wir sind in der Lage, für beliebige $\PCTL$-Formeln $\varphi$, welche die elementaren Operatoren verwenden, in polynomieller Zeit zu überprüfen, ob für ein gegebenes $s$ aus einer Markov-Kette $\mathfrak{S}$ $s\models_\mathfrak{S} \varphi$ gilt.
+Somit haben wir die Induktion vom Anfang des Kapitels beendet und sind in der Lage, für beliebige $\PCTL$-Formeln $\varphi$, welche die elementaren Operatoren verwenden, in polynomieller Zeit zu überprüfen, ob für ein gegebenes $s$ aus einer Markov-Kette $\mathfrak{S}$ $s\models_\mathfrak{S} \varphi$ gilt.
 
 Es lassen sich aber noch einige Verbesserungen finden. 
 Zum Einen haben wir die erweiterten Operatoren wie $\WeakEqual{}{t}{p}{}$, $\operatorname{AF}$, $\operatorname{EG}$ usw. nicht betrachtet, da sich diese auf die behandelten, grundlegenden Operatoren vereinfachen lassen. 
@@ -513,12 +521,12 @@ bzw. in Matrixschreibweise
 	\end{pmatrix}.
 \end{align*}
 
-Löst man dieses Gleichungssystem erhält man $\mathcal{P}(\infty, s_0)=\mathcal{P}(\infty, s_1)=\mathcal{P}(\infty, s_2)=1$.
+Löst man dieses Gleichungssystem, erhält man $\mathcal{P}(\infty, s_0)=\mathcal{P}(\infty, s_1)=\mathcal{P}(\infty, s_2)=1$.
 Und es ergibt sich, dass $s\models_\mathfrak{S} \theta$ für jedes $s\in S$ gilt.
 Nach Definition von $\theta$ folgt also, dass $s\not\models \psi$ für alle $s\in S$, insbesondere $s_0\not\models \psi$.
 Damit haben wir gezeigt, dass es keinen Pfad gibt, der immer nur in $s_0$ bleibt. 
 Über eine unbeschränkte Laufzeit ist es also unmöglich, dass das System immer läuft.
 
 Mit diesen beiden Beispielen wurden die drei Algorithmen aus Kapitel \ref{ChapMCAlgs} genauer erklärt und besprochen. 
-Insgesamt ist nun also bekannt was $\PCTL$ ist, wofür es verwendet werden kann, die $\PCTL$-Formeln gebildet werden und was diese bedeuten und wie man algorithmisch auswertet, ob eine gegebene Markov-Kette ein Modell einer $\PCTL$-Formel ist. 
+Insgesamt ist nun also bekannt was $\PCTL$ ist, wofür es verwendet werden kann, wie $\PCTL$-Formeln gebildet werden und was diese bedeuten und wie man diese algorithmisch auswertet, ob eine gegebene Markov-Kette ein Modell einer $\PCTL$-Formel ist. 
 Im Rest dieser Arbeit soll $\PCTL$ mit anderen Logiken verglichen werden, um zu betrachten, wie sinnvoll und zielführend der in \cite{hansson1994logic} verwendete Ansatz ist.
