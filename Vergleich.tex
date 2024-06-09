@@ -196,7 +196,7 @@ Es lässt sich also erkennen, dass $\PCTL$ trotz der, bzgl. Zeit, geringeren Aus
 Falls es aber wichtig ist starke Aussagen über das zeitliche Verhalten eines Systems zu formulieren, wäre $\TCTL$ vermutlich die bessere Wahl.
 
 
-\subsection{Erweiterung von $\CTL$ durch Wahrscheinlichkeiten}
+\subsection{Generalized Probabalistic Logic}
 
 Der \textit{modale $\mu$-Kalkül} ($\Lmu$) stellt eine sehr wichtige Fixpunktlogik für Korrektheitsverifikation dar.
 Das liegt daran, dass es möglich ist, die meisten für Model-Checking verwendeten Logiken in diese einzubetten. So lässt sich beispielsweise zu jeder $\CTL$- oder $\CTL^*$-Formel eine äquivalente $\Lmu$-Formel definieren.
@@ -237,13 +237,128 @@ Bevor dies für $\Lmu$ aber passieren kann, werden noch einige Vorschritte benö
 	Weiter muss für $P$ gelten, dass
 	\begin{enumerate}
 		\item Für alle $s\in S$ und alle $\alpha\in \mathsf{Act}$ gilt $\sum_{s' : (s,a,s')\in \delta} P(s,a,s')\in \{0,1\}$
-		\item Für alle $s\in S$ und alle $\alpha\in \mathsf{Act}$ gilt, wenn es ein $s'$ mit $(s,a,s')\in \delta$ gibt, dann ist $\sum_{s' : (s,a,s')\in \delta} P(s,a,s') = 1$ \cite{stirling1991local}
+		\item Für alle $s\in S$ und alle $\alpha\in \mathsf{Act}$ gilt, wenn es ein $s'$ mit $(s,a,s')\in \delta$ gibt, dann ist $\sum_{s' : (s,a,s')\in \delta} P(s,a,s') = 1$ \cite{cleaveland2005probabilistic}
 	\end{enumerate}
 \end{definition}
 
-Nun können wir Berechnungen von RPLTS als Abfolge von Zuständen der Form $\sigma = s_0\xrightarrow{a_1}s_1 \dots $
+Nun können wir Berechnungen von RPLTS als Abfolge von Zuständen der Form $\sigma = s_0\xrightarrow{a_1}s_1 \cdots \xrightarrow{a_n}s_n$ definieren mit der Voraussetzung, dass für $0\leq i <n$, $(s_i,a_{i+1},s_{i+1})\in \delta$.
+Weiter ist ein $\sigma'$ der Präfix eines $\sigma=s_0\xrightarrow{a_1} \cdots \xrightarrow{a_n}s_n$, wenn es ein $i\leq n$ gibt, mit $\sigma' = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_i}s_i$ und als Abkürzung schreiben wir $\mathcal{C}_\mathfrak{S}$ für alle Berechnungen im RPLTS $\mathfrak{S}$ und $\mathcal{C}_\mathfrak{S}(s)\coloneqq \{\sigma\in \mathcal{C}_\mathfrak{S} : s_0=s\}$. \cite{cleaveland2005probabilistic}
 
-% Es gibt auch Logiken die nur Wahrscheinlichkeiten hinzufügen. Lassen sich unterschiedliche Ansätze finden? Lösen diese andere Probleme? Paper mit anderen probabilistischen Logiken (die $\CTL$ erweitern): \cite{hart1984probabilistic}, \cite{lehmann1982reasoning} und \cite{christoff1992reasoning}.
+Damit erhalten wir eine Definition von Bäumen.
+\begin{definition}[d-Bäume]
+	Sei $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ ein RPLTS und sei $T\subseteq \mathcal{C}_\mathfrak{S}$. Wir nennen $T$ einen \textit{d-Baum}, wenn $T$ folgende Bedingungen erfüllt \cite{cleaveland2005probabilistic}:
+	\begin{itemize}
+		\item $T$ ist abgeschlossen unter Präfixen, d.h. wenn $\sigma \in T$ und $\sigma'$ ist ein Präfix von $\sigma$, dann ist $\sigma'\in T$
+		\item $T$ ist deterministisch, d.h. wenn $\sigma,\sigma'\in T$ mit $\sigma = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_n}s_n\xrightarrow{a}s\cdots$ und $\sigma' = \sigma = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_n}s_n\xrightarrow{a'}s'\cdots$, dann ist entweder $a\neq a'$ oder $s=s'$. Intuitiv bedeutet das, dass wenn zwei Berechnungspfade einen gemeinsamen Präfix haben, es entweder eine Stelle geben muss, an denen sich die verwendeten Aktionen unterscheiden oder es die gleichen Pfade sein müssen.
+		\item Es existiert ein $s\in S$ mit $T\subseteq \mathcal{C}_\mathfrak{S}(s)$. $s$ bezeichnen wir als Wurzel von $T$
+	\end{itemize}
+	Des weiteren nennen wir einen d-Baum $T$ \textit{maximal}, wenn es kein $T'$ mit $T\subseteq T'$ gibt und für ein RPLTS $\mathfrak{S}$ ist $\mathcal{M}_{\mathfrak{S}}$ die Menge aller maximalen d-Bäume, bzw. $\mathcal{M}_{\mathfrak{S}}(s)$ die Menge aller maximalen d-Bäume $T$ mit $T\subseteq \mathcal{C}_\mathfrak{S}(s)$. \cite{cleaveland2005probabilistic}
+\end{definition}
+
+Für eine Menge $B$ an d-Bäumen mit gemeinsamer Wurzel für den gilt, dass es einen Baum $T$ gibt so, dass für jedes $T'\in B$, $T\subseteq T'$ gilt, lässt sich ein Wahrscheinlichkeitsmaß $\mu_\mathfrak{S}$ definieren mit 
+$$
+\mu_\mathfrak{S}(T)\coloneqq \prod_{s_0\xrightarrow{a_1}\cdots \xrightarrow{a_i}s_i\xrightarrow{a_{i+1}}s_{i+1}\in T} P(s_i,a_{i+1},s_{i+1})
+$$
+Wie in \cite{cleaveland2005probabilistic} gezeigt, verhält sich dies dann wie ein Wahrscheinlichkeitsmaß.
+
+Mit diesem Maß haben wir die Werkzeuge, um die Erweiterung von $\Lmu$ zu definieren.
+\begin{definition}[Syntax von der generalized probabilistic logic]
+	Die generalized probabilistic logic ($\GPL$) lässt sich durch die folgenden Grammatiken definieren. Dabei ist $X$ eine Variable, $a\in \mathsf{Act}$ eine Aktion und $p\in [0,1]\subseteq \mathbb{R}$.
+	\begin{align*}
+		\Phi &\Coloneqq a \,|\, \neg a \,|\, \Phi \land \Phi \,|\, \Phi\lor \Phi\,|\, \mathsf{Pr}_{>p}\Psi \,|\, \mathsf{Pr}_{\geq p}\Psi \\
+		\Psi &\Coloneqq \Phi \,|\, X \,|\, \Psi\land\Psi \,|\, \Psi\lor \Psi \,|\, \langle a \rangle\Psi \,|\, [a]\Psi \,|\, \mu X.\Psi \,|\, \nu X.\Psi
+	\end{align*}
+	Wie auch bei $\Lmu$ werden keine freien Variablen erlaubt.
+	Auch ist eine Alternation von Fixpunktoperatoren nicht zulässig.
+	
+	Intuitiv sollen von $\Phi$ erzeugte Formeln Zustandsformeln darstellen und sind schlussendlich auch $\GPL$-Formeln. Die von $\Psi$ erzeugten Formeln sind \fuzzy.
+	Dementsprechend stellt $\Phi$ die Menge aller Zustands- und $\Psi$ die Menge aller \fuzzy dar.
+\end{definition}
+
+Um die Formeln nun auszuwerten, müssen wir zwischen $\Phi$ und $\Psi$ unterscheiden.
+Das Ziel ist es, $\psi\in \Psi$ zu einem Wert in $[0,1]$ auszuwerten, um dann mithilfe des $\mathsf{Pr}$-Operators die Modelleigenschaft zu entscheiden.
+Daher wollen wir dafür das Wahrscheinlichkeitsmaß $\mu_\mathfrak{S}$ verwenden.
+Genauer wird mit der Funktion $\Theta_\mathfrak{S}:\Psi \to 2^{\mathcal{M}_\mathfrak{S}}$ jeder \fuzzy eine Menge an maximalen Bäumen über dem RPLTS zugeordnet, welche dann zu einem Wahrscheinlichkeitswert ausgewertet werden kann. \cite{cleaveland2005probabilistic}
+
+Diese Idee wollen wir nun formalisieren. Die Funktion $\Theta_\mathfrak{S}$ wird induktiv über den Formelaufbau definiert:
+\begin{itemize}
+	\item $\Theta_\mathfrak{S}(\varphi) = \bigcup_{s\models \varphi}\mathcal{M}_\mathfrak{S}$, wobei $\varphi\in \Phi$
+	\item $\Theta_\mathfrak{S}(\langle a\rangle \psi) = \{T\in \mathcal{M}_\mathfrak{S} : \exists T' : T\xrightarrow{a}T' \land T'\in \Theta_\mathfrak{S}(\psi)\}$, wobei $T\xrightarrow{a}T'$ bedeutet, dass es eine $a$-Transition von der Wurzel von $T$ zur Wurzel von $T'$ gibt
+	\item $\Theta_\mathfrak{S}([a]\psi) = \{T\in \mathcal{M}_\mathfrak{S} : (T\xrightarrow{a}T') \Rightarrow T'\in \Theta_\mathfrak{S}(\psi)\}$
+	\item $\Theta_\mathfrak{S}(\psi_1\land \psi_2) = \Theta_\mathfrak{S}(\psi_1)\cap \Theta_\mathfrak{S}(\psi_2)$
+	\item $\Theta_\mathfrak{S}(\psi_1\lor\psi_2) = \Theta_\mathfrak{S}(\psi_1) \cup \Theta_\mathfrak{S}(\psi_2)$
+	\item $\Theta_\mathfrak{S}(\mu X.\psi) = \bigcup_{i=0}^\infty M_i$, mit $M_0=\emptyset$ und $M_{i+1} = \Theta_\mathfrak{S}(\psi[X\mapsto M_i])$, wobei $\psi[X\mapsto M_i]$ die Formel $\psi$ ist, wo $X$ durch die monadische Relation $M_i$ ersetzt wird
+	\item $\Theta_\mathfrak{S}(\nu X.\psi) = \bigcap_{i+1}^\infty N_i$, mit $N_0=\mathcal{M}_\mathfrak{S}$ und $N_{i+1}=\Theta_\mathfrak{S}(\psi[X\mapsto N_i])$
+\end{itemize}
+Weiter können wir für ein $s\in S$ $\Theta_{\mathfrak{S},s}(\psi)\coloneqq \Theta_\mathfrak{S}\cap \mathcal{M}_\mathfrak{S}(s)$ definieren. \cite{cleaveland2005probabilistic}
+
+Mit dieser Funktion können wir nun die Semantik von $\GPL$ definieren.
+\begin{definition}[Semantik von $\GPL$]
+	Sei $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ ein RPLTS und $a\in \mathsf{AP}$. Dann ist $\models_\mathfrak{S}\subseteq S\times \Phi$ induktiv definiert \cite{cleaveland2005probabilistic}:
+	\begin{itemize}
+		\item $s\models_\mathfrak{S} a$ gdw. $a\in \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \neg a$ gdw. $a\notin \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \varphi_1\land\varphi_2$ gdw. $s\models_\mathfrak{S}\varphi_1$ und $s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \varphi_1\lor\varphi_2$ gdw. $s\models_\mathfrak{S}\varphi_1$ oder $s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{>p}\psi$ gdw. $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)>p$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{\geq p}$ gdw. $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi)\geq p$
+	\end{itemize}
+\end{definition}
+
+Damit haben wir $\GPL$ vollständig definiert und können die Logik an einem Beispiel betrachten.
+Zur Vereinfachung schreiben wir $\langle \cdot \rangle\psi\coloneqq \bigvee_{a\in\mathsf{Act}}\langle a\rangle \psi$ und $[\cdot]\psi \coloneqq \bigwedge_{a\in\mathsf{Act}}[a]\psi$.
+
+\begin{example}[Beispiel für $\GPL$]
+	Man betrachte den Graphen aus Abbildung \ref{RPLTS1}, welcher einen RPLTS darstellt. 
+	Als erstes Beispiel soll die \fuzzy $\psi_1\coloneqq \mu X. \mathsf{stop} \lor \langle\cdot\rangle X$ welche aussagt, dass es einen Pfad zu einem Knoten gibt, welcher mit $\mathsf{stop}$ annotiert ist.
+	Da $A$ der Startzustand ist, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_1) = \{A\xrightarrow{a}B\xrightarrow{a}C\}$ und damit dann $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) = \left(\frac{1}{3}\right)^2=\frac{1}{9}$.
+	
+	Als zweites wollen wir nun noch die Wahrscheinlichkeit bestimmen, in einem mit $\mathsf{error}$ annotierten Zustand zu enden. 
+	Nehmen wir dafür die analoge Formel $\psi_2\coloneqq \mu X.\mathsf{error}\lor \langle \cdot \rangle X$.
+	Da die maximalen d-Bäume betrachtet werden, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_2) = \{A\xrightarrow{a}D, A\xrightarrow{a}B\xrightarrow{a}D\}$ und daraus $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = \mu_\mathfrak{S}(A\xrightarrow{a}D) + \mu_\mathfrak{S}(A\xrightarrow{a}B\xrightarrow{a}D) = \frac{2}{3}+\frac{1}{3}\cdot\frac{2}{3}=\frac{8}{9}$.
+	
+	Es fällt also auf, dass $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) + \mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = 1$.
+	Es gibt demnach nur die Möglichkeiten in einem $\mathsf{error}$- oder einem $\mathsf{stop}$-Zustand zu enden.
+	Bei Betrachtung des RPLTS ist dies offensichtlich leicht einsehbar, wir haben dies nun aber auch mithilfe von $\GPL$ bewiesen.
+\end{example}
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[shorten >= 1pt, node distance=3cm, on grid, auto]
+			\node[state, initial left, initial text={}, align=center] (A) [] {$A$ \\ $\{\mathsf{start}\}$};
+			\node[state, align=center] (B) [right=of A] {$B$ \\ $\{\}$};
+			\node[state, align=center] (C) [right=of B] {$C$ \\ $\{\mathsf{stop}\}$};
+			\node[state, align=center] (D) [below=of B] {$D$ \\ $\{\mathsf{error}\}$};
+			
+			\path[-stealth]
+			(A) edge [] node[align=center,] {$a$, $\frac{1}{3}$} (B)
+			(B) edge [] node[align=center,] {$a$, $\frac{1}{3}$} (C)
+			
+			(A) edge [] node[align=center] {$a$, $\frac{2}{3}$} (D)
+			(B) edge [] node[align=center] {$a$, $\frac{2}{3}$} (D)
+			;
+		\end{tikzpicture}
+		
+		\caption{Die graphische Darstellung des RPLTS $\mathfrak{S}$}
+		\label{RPLTS1}
+	\end{center}
+\end{figure}
+
+Wir haben damit eine sehr interessante Logik kennengelernt.
+Zum Einen stellt die \glqq Basis-Logik\grqq{} $\Lmu$ eine sehr viel ausdrucksstärkere Logik dar als $\CTL$, was sich auch in der Einbettbarkeit von einigen probabilistischen Logiken, wie unter anderem $\mathsf{p}\CTL^*$ sehen lässt \cite{cleaveland2005probabilistic}.
+Durch Wahl geeigneter Formeln wäre es demnach vermutlich auch möglich $\PCTL$ mit Voraussetzung $t=\infty$ in $\GPL$ einzubetten.
+Insgesamt stellt diese Erhöhung der Ausdruckskraft aber auch Nachteile dar.
+So ist das Auswerten sehr viel aufwendiger und auch der in \cite{cleaveland2005probabilistic} vorgestellte Model-Checking Algorithmus benötigt einige Schritte mehr als der für $\PCTL$.
+Wir befinden uns also in einer ähnlichen Situation wie bei $\TCTL$.
+Jedoch gibt es dennoch den Unterschied, dass $\GPL$ mit zeitlichen Aspekten wie $\PCTL$ erweitert werden könnte, da bloß das Zählen der verwendeten Kanten nötig ist.
+Dies ließe sich bspw. durch das Kontrollieren der Baumlänge durchführen.
+Eine solche Erweiterung um, wie $\PCTL$, sowohl über Zeit als auch Wahrscheinlichkeiten aussagen zu treffen scheint also um einiges realistischer als für $\TCTL$.
+
+Zusätzlich sind die Aussagen, die $\GPL$ über Wahrscheinlichkeiten aufstellen kann sehr ähnlich zu denen von $\PCTL$, unter Anbetracht, dass $\GPL$ die deutlich mächtigere Logik ist.
+Dies liegt daran, dass beide Logiken die möglichen Pfade durchsuchen, um die Wahrscheinlichkeit des Erreichens von Regionen zu berechnen.
+Als Schnittstelle bieten beide Logiken auch die Möglichkeit eine Schwelle anzugeben, welche von einem Knoten erreicht bzw. überschritten werden muss, um die Formel zu erfüllen.
+Die beiden Logiken ähneln sich also sehr in dem Aspekt, wie diese Wahrscheinlichkeiten implementieren.
+
 
 
 
