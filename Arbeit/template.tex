@@ -1,0 +1,122 @@
+%default language is German. use the second line instead for english settings:
+\RequirePackage{ifpdf}
+\documentclass{lni}
+%\documentclass[english]{lni}
+
+\IfFileExists{latin1.sty}{\usepackage{latin1}}{\usepackage{isolatin1}}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+
+% Extra packages
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage{latexsym}
+
+\usepackage{mathtools}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\usepackage{turnstile}
+
+\usepackage{algorithm}
+\makeatletter
+\renewcommand{\ALG@name}{Algorithmus}
+\makeatother
+\usepackage{algpseudocode}
+
+\usepackage{ stmaryrd }
+
+\usepackage{newclude}
+
+% Own environments
+
+\newtheoremstyle{def_style}
+{\topsep}{\topsep}%
+{}{}%
+{\bfseries}{}%
+{\newline}{}%
+
+\theoremstyle{def_style}
+\newtheorem{definition}{Definition}[section]
+
+\newtheoremstyle{break}
+{\topsep}{\topsep}%
+{}{}%
+{\bfseries}{}%
+{\newline}{}%
+
+\theoremstyle{break}
+\newtheorem{example}{Beispiel}
+
+% Own commands
+
+\newcommand{\AU}[2]{\operatorname{A}[#1\operatorname{U}#2]}
+\newcommand{\EU}[2]{\operatorname{E}[#1\operatorname{U}#2]}
+\newcommand{\AW}[2]{\operatorname{A}[#1\operatorname{W}#2]}
+\newcommand{\EW}[2]{\operatorname{E}[#1\operatorname{W}#2]}
+
+\newcommand{\UEqual}[4]{#1\operatorname{U}^{\leq #2}_{\geq #3}#4}
+\newcommand{\UStrict}[4]{#1\operatorname{U}^{\leq #2}_{> #3}#4}
+\newcommand{\WeakEqual}[4]{#1\operatorname{\mathcal{U}}^{\leq #2}_{\geq #3}#4}
+\newcommand{\WeakStrict}[4]{#1\operatorname{\mathcal{U}}^{\leq #2}_{> #3}#4}
+
+\newcommand{\paths}[2]{\operatorname{paths}^{#1}_{#2}}
+
+\newcommand{\Arrow}[4]{#1 \leadsto^{\leq #2}_{\geq #3}#4}
+
+
+\newcommand{\reset}[1]{\operatorname{reset}(#1)}
+
+\author{
+	Theodor Teslia \\ 
+	\\ 
+	Informatik 11 -- Embedded Software \\ 
+	RWTH Aachen University \\ 
+	Aachen, Germany \\ 
+	teslia@embedded.rwth-aachen.de\\
+	\\
+	\textit{Betreuer}\\
+	\textit{Robin Mross}\\ %Dies ist der inhaltliche Betreuer. Wer das ist, erfahren Sie noch.
+}
+\title{\small{Seminar} \\ \vspace{0.5cm} \Large{Eine Logik für das Schlussfolgern über Zeit und Zuverlässigkeit}}
+
+\newcommand{\CTL}{\mathsf{CTL}}
+\newcommand{\PCTL}{\mathsf{PCTL}}
+\newcommand{\FO}{\mathsf{FO}}
+\newcommand{\TCTL}{\mathsf{TCTL}}
+\newcommand{\Lmu}{\mathsf{L}\text{-}\mu}
+\newcommand{\GPL}{\mathsf{GPL}}
+
+\newcommand{\fuzzy}{fusselige Formeln}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	Es wird eine Logik für die Verifikation von Soft-Realtime-Systemen vorgestellt.
+	Diese ermöglicht es, Aussagen über Zeit und Wahrscheinlichkeiten zu treffen.
+	Weiter werden äußerst performante Model-Checking Algorithmen besprochen, welche ein algorithmisches Auswerten der Formeln ermöglichen.
+	Durch den Vergleich mit weiteren, sehr ausdrucksstarken Logiken, kommen wir schließlich zu dem Ergebnis, dass die Logik sehr viel über Wahrscheinlichkeiten aussagen kann, für komplexe zeitliche Zusammenhänge aber eher ungeeignet ist.
+\end{abstract}
+
+\include*{Einfuehrung}
+
+\include*{Grundlagen}
+
+\include*{PCTLKapitel}
+
+\include*{Vergleich}
+
+\include*{VerwandteArbeiten}
+
+\include*{Konklusion}
+
+\bibliography{references}
+
+\end{document}

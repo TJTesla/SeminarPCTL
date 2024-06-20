@@ -1,0 +1,61 @@
+\section{Grundlagen}
+\label{ChapGrundlagen}
+
+Es ist ratsam die grundlegende Logik zu kennen, wenn sich mit einer Erweiterung davon beschäftigt wird. Aus diesem Grund soll in diesem Kapitel in die Logik \textit{Computation-Tree-Logic} ($\CTL$) und naheliegende wichtige Themen eingeleitet werden.
+Zusätzlich soll noch angemerkt werden, dass $0\in \mathbb{N}$ gilt.
+
+$\CTL$ ist eine temporale Logik, um Aussagen in nicht-deterministischen Systemen zu treffen. 
+Dafür betrachtet man Kripkestrukturen, welche eine Art Graph darstellen, da diese viele Eigenschaften liefern, die für $\CTL$-Anwendungsfälle interessant sind.
+
+\begin{definition}[Syntax von $\CTL$]
+	Die Menge der $\CTL$-Formeln lässt sich induktiv mithilfe folgender Regeln definieren \cite{clarke1982design, baier2008principles}:
+	\begin{enumerate}
+		\item Wenn $\mathsf{AP}$ eine Menge an atomaren Aussagen ist, dann ist jedes $a\in \mathsf{AP}$ eine $\CTL$-Formel. Außerdem sind $\top$ und $\bot$ $\CTL$-Formeln.
+		\item Wenn $\varphi_1$ und $\varphi_2$ $\CTL$-Formeln sind, dann sind $\neg\varphi_1$, $\varphi_1 \land \varphi_2$ und $\varphi_1 \lor \varphi_2$ ebenfalls $\CTL$-Formeln.
+		\item Wenn $\varphi_1$ eine $\CTL$-Formel ist, dann sind auch $\operatorname{EX}\varphi_1$ und $\operatorname{AX}\varphi_1$ $\CTL$-Formeln.
+		\item Wenn $\varphi_1$ und $\varphi_2$ $\CTL$-Formeln sind, dann sind $\EU{\varphi_1}{\varphi_2}$, $\AU{\varphi_1}{\varphi_2}$, $\EW{\varphi_1}{\varphi_2}$ und $\AW{\varphi_1}{\varphi_2}$ auch $\CTL$-Formeln.
+	\end{enumerate}
+\end{definition}
+
+Bevor die Semantik erläutert wird, sollen zuerst die Strukturen gezeigt werden, die man typischerweise mit $\CTL$ zusammen verwendet.
+
+\begin{definition}[Kripkestrukturen]
+	\label{DefKripkeStruk}
+	Eine \textit{Kripkestruktur} oder \textit{Transitionssystem} ist ein Graph von der Form $\mathcal{K}=(V, E, \mathcal{L})$, wobei $E$ eine zweistellige Kantenrelation über $V$ ist und $\mathcal{L}$ eine Funktion $\mathcal{L}:V\to2^{\mathsf{AP}}$ ist, die jedem Zustand eine Menge an atomaren Aussagen zuweist 	\cite{clarke1982design,clarke1986automatic}.
+	
+	Weiter bezeichnen wir einen Pfad als $\sigma=s_0 s_1 \dots$ mit $s_i\in V$ für alle $i\in\{0, 1,\dots,\}$ und $\sigma[i]=s_i$ für $i\in \mathbb{N}$, bzw. für endliche Pfade $\sigma = s_0 \dots s_n$ und $\sigma[i] = s_i$ für $0\leq i \leq n$ \cite{baier2008principles}.
+\end{definition}
+
+\begin{definition}[Semantik von $\CTL$]
+	Für ein Transitionssystem $\mathcal{K}=(V,E,\mathcal{L})$ können wir damit induktiv die Modellbeziehung $\models$ zwischen einem Knoten $v\in V$ und $\CTL$-Formeln definieren \cite{baier2008principles}:
+	\begin{enumerate}
+		\item $v\models \top \Leftrightarrow \mathcal{K}\models\forall x(x=x)\text{ und }v\models \bot \Leftrightarrow \mathcal{K}\models\exists x(x\neq x)$.
+		\item $\text{Für }a\in \operatorname{AP}\text{ gilt }v\models a \Leftrightarrow a\in \mathcal{L}(v)$.
+		\item $\text{Es gilt }v\models \neg \varphi \Leftrightarrow \text{ nicht }v\models \varphi$, geschrieben als $v\not\models \varphi$\\
+		$v\models \varphi_1 \land \varphi_2 \Leftrightarrow v\models \varphi_1 \text{ und } v\models \varphi_2$,\\
+		$v\models \varphi_1 \lor \varphi_2 \Leftrightarrow v\models \varphi_1 \text{ oder } v\models \varphi_2$,
+		\item $\text{Es gilt }v\models \operatorname{EX}\varphi \Leftrightarrow$ es ex. ein $w\in V$ mit $(v,w)\in E\text{ und }w\models \varphi$ und analog:\\ 
+		$v\models \operatorname{AX}\varphi \Leftrightarrow$ für alle $w\in V$ mit $(v,w)\in E\text{ gilt }w\models \varphi$.
+		\item $\text{Es gilt }v\models \EU{\varphi_1}{\varphi_2} \Leftrightarrow$ es existiert ein Pfad $\sigma$ in $\mathcal{K}$, der in $v$ beginnt und ein $i\in \mathbb{N}$ so, dass $\sigma[i]\models \varphi_2$ und für alle $0\leq j < i$ gilt $\sigma[j]\models \varphi_1$. 
+		Analog ist die Definition für $\AU{\varphi_1}{\varphi_2}$, es muss dann aber für jeden in $v$ beginnenden Pfad ein $i\in \mathbb{N}$ geben so, dass der $i$-te Zustand $\varphi_2$ und alle Zustände davor $\varphi_1$ erfüllen.
+		\item $\text{Es gilt }v\models \EW{\varphi_1}{\varphi_2} \Leftrightarrow$ es existiert ein (unendlicher) Pfad $\sigma$ so, dass entweder ein $i\in \mathbb{N}$ existiert mit $\sigma[i]\models \varphi_2$ und für alle $0\leq j < i$ gilt $\sigma[j]\models \varphi_1$, oder es gilt $\sigma[i]\models \varphi_1$ für alle $i\in \mathbb{N}$.
+		Für $\AW{\varphi_1}{\varphi_2}$ ist die Definition analog, bloß mit einem All- anstatt Existenzquantor.
+	\end{enumerate}
+\end{definition}
+
+Intuitiv bedeutet $\operatorname{EX}\varphi$ also, dass $\varphi$ in einem beliebigen Nachfolgezustand gelten muss und $\operatorname{AX}\varphi$, dass $\varphi$ von allen Nachfolgezuständen erfüllt wird.
+
+$\EU{\varphi_1}{\varphi_2}$ bzw. $\AU{\varphi_1}{\varphi_2}$ sagt aus, dass es einen Pfad $\sigma$ gibt bzw. auf allen Pfaden $\sigma$ gilt, dass zuerst $\varphi_1$ gilt, bis von einem Zustand $\varphi_2$ erfüllt wird.
+Die anderen Operatoren haben die bekannte Bedeutung.
+
+Um einige Eigenschaften einfacher auszudrücken werden zusätzlich noch weitere Operatoren definiert \cite{clarke1982design}:
+\begin{itemize}
+	\item $\operatorname{EF}\varphi \equiv \EU{\top}{\varphi}\text{ und }\operatorname{AF}\varphi \equiv \AU{\top}{\varphi}$ bedeuten intuitiv, dass es einen Pfad gibt  auf dem irgendwann $\varphi$ gilt, bzw. dies für alle Pfade gilt.
+	\item $\operatorname{EG}\varphi \equiv \neg\operatorname{EF}\neg\varphi\text{ und }\operatorname{AG}\varphi \equiv \neg\operatorname{AF}\neg\varphi$ bedeuten, dass es einen Pfad gibt in dem in jedem Zustand $\varphi$ gilt bzw. dies für alle Pfade gilt.
+\end{itemize}
+Mithilfe dieser Syntax und zugehöriger Semantik auf Transitionssystemen wollen wir nun eine beispielhafte $\CTL$-Formel betrachten:
+\begin{example}[Beispiel für $\CTL$-Formeln und deren Bedeutung]
+	Sei die Menge der atomaren Aussagen $\mathsf{AP}=\{\mathsf{idle}, \mathsf{error}\}$.
+	Dann besagt die Formel $\operatorname{EF}\operatorname{AG}\mathsf{error}$, dass es einen Pfad gibt, auf dem ab irgendeinem Zustand alle Zustände die atomare Aussage $\mathsf{error}$ erfüllen. 
+	Das heißt, es gibt einen Pfad mit einem irreversiblen Fehler.
+\end{example}

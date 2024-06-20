@@ -1,0 +1,204 @@
+\section{Vergleich mit Halbringsemantik}
+
+Ein weiterer Ansatz um die Ausdrucksstärke einer Logik zu erweitern ist es, Formeln nicht nur zu \textit{wahr} oder \textit{falsch} auszuwerten, sondern einer Formel einen Wert aus einem Halbring zuzuordnen.
+Diese Methode wird als Halbringsemantik bezeichnet.
+Abhängig davon, in welcher Halbring verwendet wird, lassen sich unterschiedliche Anwendungen darstellen. 
+So gibt es zum Beispiel den natürlichen Halbring $\mathbb{N}=(\mathbb{N},+,\cdot,0,1)$ zum Zählen, den tropischen Halbring $\mathbb{T}=(\mathbb{R}^\infty_+\coloneqq\mathbb{R} \cup \{0,\infty\},\min,+,\infty,0)$ für Kostenanalyse oder den Viterbi-Halbring $\mathbb{V}=\{[0,1],\max,\cdot,0,1\}$ für Vetrauensanalyse \cite{dannert2019provenance}.
+Letzterer soll im Weiteren behandelt und, verbunden mit $\CTL$ im Vergleich zu $\PCTL$ betrachtet werden.
+Dafür wird nun aber erst die Halbringsemantik für die Prädikatenlogik erster Ordnung ($\FO$) besprochen.
+
+\subsection{Halbringsemantik für $\FO$}
+\label{ChapHalbringFO}
+
+Die Syntax als auch Semantik von $\FO$ wird als bekannt vorausgesetzt.
+Falls dies nicht der Fall ist, lassen sich die wichtigen Informationen in \cite{barwise1977introduction} oder \cite{ebbinghaus1994mathematical} nachlesen.
+Um die hier verwendete Notation zu erklären soll $\FO$ aber dennoch definiert werden.
+
+\begin{definition}[Syntax von $\FO$]
+	Eine Signatur $\tau$ ist eine Menge an Relationen und Funktionen fester Stelligkeit.
+	Dann ist die Menge der $\tau$-Terme $\operatorname{Terms}(\tau)$ definiert durch
+	\begin{itemize}
+		\item Wenn $x$ eine Variable ist, dann ist $x\in\operatorname{Terms}(\tau)$
+		\item Wenn $a$ eine Funktion mit Stelligkeit $0$ ist (also eine Konstante), dann gilt $a\in \operatorname{Terms}(\tau)$
+		\item Wenn $t_1,\dots,t_k$ $\tau$-Terme sind und $f$ eine $k$-stellige Funktion ist, dann gilt $f(t_1\dots t_k)\in \operatorname{Terms}(\tau)$.
+	\end{itemize}
+	Damit lässt sich nun die Menge der $\FO$-Formeln definieren
+	\begin{enumerate}
+		\item Wenn $t_1,t_2\in \operatorname{Terms}(\tau)$, dann ist $t_1=t_2\in\FO$ \label{TermEquiv}
+		\item Wenn $t_1,\dots,t_k\in \operatorname{Terms}(\tau)$, und $R$ ist eine $k$-stellige Relation in $\tau$, dann ist $R(t_1\dots t_k) \in \FO$ \label{RelationSyntax}
+		\item Wenn $\varphi\in \FO$, dann ist $\neg\varphi\in \FO$
+		\item Wenn $\varphi_1,\varphi_2\in \FO$, dann ist $\varphi_1\land\varphi_2,\varphi_1\lor\varphi_2,\varphi_1\rightarrow\varphi_2\in \FO$
+		\item Wenn $x$ eine Variable ist und $\varphi\in \FO$, dann ist $\exists x \varphi(x)\in \FO$ und $\forall x \varphi(x)\in \FO$
+	\end{enumerate}
+	
+	Formeln, die nur durch die Regeln \ref{TermEquiv} ud \ref{RelationSyntax} verwenden bezeichnen wir als atomar.
+\end{definition}
+
+In diesem Kapitel soll die Halbringsemantik für $\FO$ betrachtet werden. 
+Wie der Name schon sagt, wird eine alternative Semantik für $\FO$ verwendet werden.
+Aus diesem Grund soll die klassische Semantik hier nicht behandelt werden, Informationen dazu lassen sich ebenfalls in \cite{barwise1977introduction} und \cite{ebbinghaus1994mathematical} finden.
+
+Bevor wir nun aber Halbringsemantik betrachten soll erklärt werden, was ein Halbring ist. 
+Ein (kommutativer) Halbring ist eine Struktur $\mathfrak{S}=(S,+,\cdot,0,1)$, wobei $0\neq 1$, $(S,+,0)$, als auch $(S,\cdot,1)$ (abelsche) Monoide sind, $\cdot$ ist distributiv über $+$ und $0\cdot a = a \cdot 0 = 0$ für alle $a\in S$. \cite{dannert2019provenance}
+% TODO: Weitere Eigenschaften (+-positivität, Idempotenz etc.) falls im Weiteren benötigt
+
+Jetzt können wir die Halbringsemantik für $\FO$ definieren.
+Sei $A$ ein Universum und $\tau$ eine relationale Signatur.
+Dann ist $\operatorname{Facts}_A(\tau)\coloneqq\{Ra : R\in\tau, a\in A^{\operatorname{st}(R)}\}$\footnote{Für eine Relation $R$ ist $\operatorname{st}(R)\in \mathbb{N}$ die Stelligkeit von $R$.} und $\operatorname{Lit}_A(\tau)\coloneqq \{\alpha,\neg\alpha : \alpha\in \operatorname{Facts}_A(\tau)\}$.
+Sei $\mathfrak{S}$ nun ein kommutativer Halbring. 
+Damit können wir eine $\mathfrak{S}$-Interpretation $\pi:\operatorname{Lit}_A(\tau)\to S$ definieren, welche jeder atomaren und negiert-atomaren Formel einen Wert im Halbring zuweist. \cite{dannert2019provenance}
+
+\begin{definition}[Halbringsemantik $\FO$]
+	Sei $A$ ein Universum, $\tau$ eine Signatur und $\pi$ eine $\mathfrak{S}$-Interpretation für einen Halbring $\mathfrak{S}$. Dann erweitert sich $\pi$ zu einer Interpretation $\pi:\FO\to S$ wie folgt \cite{dannert2019provenance}
+	\begin{itemize}
+		\item Für eine Formel $\varphi$ schreiben wir $\operatorname{nnf}(\varphi)$ für die Negations-Normalform von $\varphi$. Dann gilt $\pi \llbracket \neg\varphi\rrbracket = \pi\llbracket \operatorname{nnf}(\neg\varphi)\rrbracket$
+		\item $\pi\llbracket \varphi_1\land \varphi_2\rrbracket = \pi\llbracket \varphi_1 \rrbracket \cdot \pi\llbracket \varphi_2 \rrbracket$
+		\item $\pi \llbracket \varphi_1 \lor \varphi \rrbracket = \pi\llbracket \varphi_1 \rrbracket + \pi\llbracket \varphi_2 \rrbracket$
+		\item $\pi \llbracket \exists x \varphi(x) \rrbracket = \pi \llbracket \sum_{a\in A} \varphi(a) \rrbracket$
+		\item $\pi \llbracket \forall x \varphi(x) \rrbracket = \pi \llbracket \prod_{a\in A} \varphi(a) \rrbracket$
+	\end{itemize}
+\end{definition}
+
+Es lässt sich erkennen, dass $\lor$ und $\exists$ durch $+$, und $\land$ und $\forall$ durch $\cdot$ dargestellt werden.
+Informell stellt $+$ also eine alternative Nutzung von Informationen dar, da bei $\lor$ nur eine der beiden Optionen benötigt wird, während $\cdot$ für gemeinsame Nutzung steht, da bei $\land$ alle Optionen gelten müssen.
+Um diese Definition zu verdeutlichen soll ein Beispiel vorgeführt werden.
+
+\begin{example}[Beispiel für $\FO$ mit dem Viterbi-Halbring]
+	Sei $A=\{1,2,3,4\}$, $\tau=\{E\}$, wobei $E$ ein $2$-stelliges Relationssymbol ist und $\pi: \operatorname{Lit}_A(\tau) \to [0,1]$ eine $\mathbb{V}$-Interpretation in den Viterbi-Halbring $\mathbb{V}=([0,1],\max,\cdot, 0, 1)$ gegeben durch Tabelle \ref{SemiringSemanticsFOBsp}.
+	
+	\begin{table}[h]
+		\begin{center}
+			\begin{tabular}{c|cccc}
+				$E(x,y)$ & $y=1$ & $y=2$ & $y=3$ & $y=4$ \\
+				\hline
+				$x=1$ & $0$ & $0.15$ & $0.32$ & $0$ \\
+				$x=2$ & $0$ & $0$ & $0$ & $0$ \\
+				$x=3$ & $0$ & $0$ & $0$ & $0.21$ \\
+				$x=4$ & $0.99$ & $0$ & $0$ & $0.06$ \\
+			\end{tabular}
+		\end{center}
+		\begin{center}
+			\begin{tabular}{c|cccc}
+				$\neg E(x,y)$ & $y=1$ & $y=2$ & $y=3$ & $y=4$ \\
+				\hline
+				$x=1$ & $1$ & $0$ & $0$ & $1$ \\
+				$x=2$ & $1$ & $1$ & $1$ & $1$ \\
+				$x=3$ & $1$ & $1$ & $1$ & $0$ \\
+				$x=4$ & $0$ & $1$ & $1$ & $0$ \\
+			\end{tabular}
+		\end{center}
+		\caption{Tabelle zur Definition der $\mathbb{V}$-Interpretation}
+		\label{SemiringSemanticsFOBsp}
+	\end{table}
+	
+	Wenn man sich diese Definition anschaut fällt einem auf, dass diese einen Graphen definiert, auf dem jede Kante durch eine Wahrscheinlichkeit annotiert ist.
+	Dies liegt daran, dass für jedes $(x,y)\in A^2$ gilt, dass $\pi\llbracket E(x,y)\rrbracket=0$ genau dann, wenn $\pi\llbracket \neg E(x,y) \rrbracket\neq 0$, diese Eigenschaft nennt man auch \textit{modelldefinierend} \cite{dannert2019provenance}.
+	Der zugehörige Graph $G$ ist in Abbildung \ref{SemiringSemanticsFOBspGraph} einsehbar.
+	
+	\begin{figure}[h]
+		\begin{center}
+			\begin{tikzpicture}[shorten >= 1pt, node distance=4cm, on grid, auto]
+				\node[state, initial above, initial text={}, align=center] (1) [] {$1$};
+				\node[state, align=center] (2) [right=of 1] {$2$};
+				\node[state, align=center] (3) [below=of 1] {$3$};
+				\node[state, align=center] (4) [right=of 3] {$4$};
+				
+				\path[-stealth]
+				(1) edge [] node {$0.15$} (2)
+				(1) edge [] node {$0.32$} (3)
+				
+				(3) edge [] node {$0.21$} (4)
+				
+				(4) edge [] node {$0.99$} (1)
+				(4) edge [loop right] node {$0.06$} (4)
+				;
+			\end{tikzpicture}
+			
+			\caption{Graph $G$ für die den durch $\pi$ definierten Graphen}
+			\label{SemiringSemanticsFOBspGraph}
+		\end{center}
+	\end{figure}
+	
+	Eine mögliche Interpretation des Viterbi-Halbrings ist es, diese als Vertrauenswerte zu verwenden. 
+	Ein Wert im Viterbi-Halbring gibt also Informationen darüber, wie sicher man über die Korrektheit eines Faktums ist. 
+	Hier am Beispiel heißt das zum Beispiel, dass die Kante von Knoten $1$ zu $2$ mit einer Wahrscheinlichkeit von $\pi\llbracket E(1,2)\rrbracket = 0.15$ existiert und mit einer Wahrscheinlichkeit von $\pi\llbracket \neg E(1,2)\rrbracket = 0$ nicht existiert.
+	
+	Betrachten wir bspw. die Formel $\varphi=\forall x \exists y (Exy)$ die aussagt, dass jeder Knoten eine ausgehende Kante besitzt. 
+	Wenn wir also wissen wollen, wie sicher man sich sein kann, dass Graph $G$ diese Eigenschaft besitzt, müssen wir bloß $\pi\llbracket \varphi \rrbracket$ auswerten. Es gilt
+	\begin{align*}
+		\pi\llbracket \forall x \exists y E(x,y)\rrbracket &= \prod_{a\in A}\pi\llbracket \exists y E(a,y)\rrbracket \\
+		&= \prod_{a\in A}\sum_{b\in A} \pi\llbracket E(a,b)\rrbracket \\
+		&= \left(\prod_{a\in A\setminus\{2\}}\sum_{b\in A} \pi\llbracket E(a,b)\rrbracket\right) \cdot \underbrace{\left(\sum_{b\in A} \pi\llbracket E(2,b)\rrbracket\right)}_{=0} \\
+		&= 0.
+	\end{align*}
+	Die Formel gilt also nicht für den durch $\pi$ definierten Graphen.
+	
+	Für die Formel $\psi= \forall y \exists x E(x,y)$ die besagt, dass jeder Knoten eine eingehende Kante hat lässt sich eine ähnliche Rechnung durchführen und man erhält $\pi\llbracket \psi \rrbracket = 0.99\cdot 0.15\cdot 0.32 \cdot 0.21 \approx 1\%$
+\end{example}
+
+Somit können wir also ähnliche Aussagen treffen wie dies mit $\PCTL$ und $t=\infty$ möglich ist.
+Das Problem ist jedoch, dass $\FO$ auf Graphen sehr wenig Aussagekraft besitzt, weshalb sich diese nicht zur Verifikation anbietet.
+Aus diesem Grund soll nun Halbringsemantik für $\CTL$ eingeführt werden.
+
+%Verwendung des Viterbi-Halbrings zum Auswerten von $\mathsf{FO}$ auf Graphen. Dieses Kapitel wird bei Platzproblemen weggelassen und der Übergang von $\mathsf{FO}$ auf $\mathsf{CTL}$ wird kurz in Kapitel \ref{HalbringCTL} passieren. Falls ich kein veröffentlichtes Paper mit den Informationen finde, benutze ich \cite{gradel2022provenance}.
+
+\subsection{Halbringsemantik für $\CTL$}
+\label{ChapHalbringCTL}
+
+In diesem Kapitel wollen wir die im letzten Kapitel für $\FO$ entwickelte Semantik auf $\CTL$ ausweiten. 
+Die so erhaltene Logik bezeichnen wir als $\cCTL$, was für \textit{constraint-semiring-}$\CTL$ steht \cite{lluch2005quantitative}.
+Ein wichtiger Unterschied zu $\FO$ ist aber, dass $\CTL$ eine modale Logik ist, wodurch es nicht ausreicht eine Formel in einen einzelnen Wert eines Halbrings auszuwerten.
+Aus diesem Grund definiert eine Formel eine Abbildung von den Kanten des Transitionssystems (siehe Definition \ref{DefKripkeStruk}) in einen Halbring.
+Formal definiert ein Halbring $\mathfrak{A}=(A,+,\cdot,0,1)$ und eine Kripkestruktur $\mathfrak{S}=(S, E, \mathcal{L})$ also eine Abbildung $v:E\to A$.
+Weiter definieren wir $V\coloneqq A^{E}$ die Menge aller Bewertungen der Zustände.
+Damit erhalten wir einen weiteren Halbring $\mathcal{V}=(V,\oplus,\otimes,\boldsymbol{0},\boldsymbol{1})$, mit folgenden Definition:
+\begin{itemize}
+	\item $\oplus$ ist eine zweistellige Funktion mit $(v\oplus v')(e) = v(e)+v'(e)$
+	\item $\otimes$ ist eine zweistellige Funktion mit $(v\otimes v')(e) = v(e)\cdot v'(e)$
+	\item $\boldsymbol{0}$ ist eine Konstante für die gilt $\boldsymbol{0}(e) = 0\in A$
+	\item $\boldsymbol{1}$ ist eine Konstante für die gilt $\boldsymbol{1}(e) = 1\in A$
+\end{itemize}s
+
+\begin{definition}[Syntax von $\cCTL$]
+	Sei $\mathfrak{A}=(A+,\cdot,0,1)$ ein wie in Kapitel \ref{ChapHalbringFO} definierter Halbring und sei $a\in A$ und $x\in \mathsf{AP}$. Dann lässt sich $\cCTL$ mithilfe folgender Grammatiken definieren:
+	\begin{align*}
+		\varphi &\Coloneqq a \, | \, x \, | \, \varphi \land \varphi \, | \, \varphi \lor \varphi \, | \, \neg\varphi \, | \, \kappa \psi \, | \, \kappa \boldsymbol{X}\varphi \\
+		\kappa &\Coloneqq \bigsqcup \, | \, \bigsqcap \\
+		\psi &\Coloneqq \boldsymbol{F}\varphi \, | \, \boldsymbol{G}\varphi \, | \, [\varphi\boldsymbol{U}\varphi] \, | \, [\varphi\boldsymbol{W}\varphi]
+	\end{align*}
+	
+	Dann ist die Menge der $\cCTL$-Formeln die Ausdrücke, die von $\varphi$ erzeugt werden. \cite{lluch2005quantitative}
+\end{definition}
+
+Die intuitiven Bedeutungen von $\land$, $\lor$ und $\neg$ sind wie bekannt.
+$a$ stellt eine konstante Bewertung aller Kanten dar, während $v$, analog zu booleschen atomaren Aussagen, jeder Kante einen Halbring-Wert zuweist.
+Die durch $\kappa$ erzeugten Ausdrücke sind analog zu Quantoren und die durch $\psi$ erzeugten Ausdrücke stellen die aus $\CTL$ bekannten Begriffe \textit{finally} ($\boldsymbol{F}$), \textit{globally} ($\boldsymbol{G}$), \textit{until} ($\boldsymbol{U}$) und \textit{weak until} ($\boldsymbol{W}$) dar.
+
+Bevor wir diese Bedeutungen formal definieren, soll noch über Negation gesprochen werden.
+Im Booleschen-Halbring ist es offensichtlich möglich einen Wert zu invertieren bzw. zu negieren, da es lediglich zwei mögliche Werte gibt und demnach immer \textit{der andere} Wert eindeutig definiert ist.
+Im Allgemeinen ist dies aber nicht so trivial. Zum Lösen dieses Problems existieren zwei verschiedene Ansätze. 
+Zum Einen ist es möglich einen Negationsoperator $-:A\to A$ zu definieren. 
+Zum Anderen lässt sich $v$ ausweiten auf eine Bewertung $v^*:\{E(x,y), \neg E(x,y) : x,y\in S\}\to A$ so, dass, wie in Kapitel \ref{ChapHalbringFO}, nicht nur der Existenz einer Kante ein Wert zugeordnet wird, sondern auch dem Fehlen der Kante.
+Im Weiteren soll der Letztere Ansatz verwendet werden.
+Demnach definieren wir die Menge $V^*\coloneqq A^{\{E(x,y), \neg E(x,y) : x,y\in S\}}$ aller erweiterten Bewertungen.
+Wie für $\FO$ wird demnach dann aber auch eine Negationsnormalform benötigt, die
+
+Zudem betrachten wir $\mathcal{L}$ nicht mehr als Abbildung von Zuständen auf Teilmengen von $\mathsf{AP}$, sondern als Menge $\{v_x : x\in \mathsf{AP}\}$ von Abbildungen $v_x:S\to A$, die jedem Zustand einen Halbring-Wert zuweisen.
+Betrachtet man dies mit $\mathfrak{A}=\mathbb{B}$ dem Booleschen-Halbring, dann erhält man $v_x:S\to \{0,1\}$, was uns die gewohnte Bedeutung von atomaren Aussagen gibt.
+
+\begin{definition}[Semantik von $\cCTL$]
+	Für einen Halbring $\mathfrak{A}=(A,+,\cdot,0,1)$ und eine Kripke-Struktur $\mathfrak{S}=(S,E,\mathcal{L})$ wird eine $\cCTL$-Formel $\varphi$ zu einer Abbildung $v\in V$ ausgewertet.
+	Diese Auswertung lässt sich induktiv mithilfe folgender Regeln definieren \cite{lluch2005quantitative}:
+	\begin{itemize}
+		\item $\llbracket a \rrbracket(s) = a$ und $\llbracket v \rrbracket(s) = v(s)$ für alle $s\in S$
+		\item $\llbracket \varphi_1 \land \varphi_2 \rrbracket = \llbracket\varphi_1\rrbracket \otimes \llbracket\varphi_2\rrbracket$, $\llbracket \varphi_1\lor\varphi_2 \rrbracket = \llbracket \varphi_1\rrbracket \oplus \llbracket \varphi_2\rrbracket$, $\llbracket \neg \varphi \rrbracket = -\llbracket \varphi \rrbracket$
+		\item $\llbracket $
+	\end{itemize}
+\end{definition}
+
+
+% Erweiterung der Halbringsemantik für $\mathsf{FO}$ auf $\CTL$. Informationen sollen aus \cite{dannert2019generalized} und \cite{lluch2005quantitative} stammen.
+
+\subsection{Vergleich von Halbringsemantik für $\CTL$ mit $\PCTL$}
+
+Unterschiede im Ansatz der beiden Varianten. Falls sich diese einfach beheben lassen, Vergleich in der Nutzung, der Ausdruckskraft etc.

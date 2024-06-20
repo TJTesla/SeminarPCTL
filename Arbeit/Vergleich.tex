@@ -1,0 +1,329 @@
+\section{Vergleich mit anderen Logiken}
+\label{ChapVerwandt}
+
+Da nun die Logik $\PCTL$ bekannt, ist sollen zwei alternative Ansätze bzw. Logiken diskutiert werden, die zeitliche Aspekte bzw. Wahrscheinlichkeiten hinzufügen.
+Dafür sollen zwei Logiken genauer betrachtet werden.
+Eine erweitert $\CTL$ durch ein komplexes System, welches reelle Zeitwerte erlaubt und so sehr viel mehr über Zeit aussagen kann als $\PCTL$.
+Die andere Logik stellt eine Erweiterung des modal $\mu$-Kalküls durch Wahrscheinlichkeiten dar.
+Diese ermöglicht es, ähnlich wie in $\PCTL$ auszusagen, dass eine Formel für mindestens bzw. mehr als $p\%$ der Fälle gilt.
+
+\subsection{Timed-Computation-Tree-Logic}
+
+In diesem Kapitel wird die in \cite{alur1990model} definierte Logik \textit{Timed-Computation-Tree-Logic} ($\PCTL$) besprochen. Dafür werden die dazugehörigen Strukturen, ihre Syntax sowie ihre Semantik erörtert und durch Beispiele dargestellt.
+
+Die Logik $\TCTL$ stellt, ähnlich wie $\PCTL$, eine Möglichkeit zur Verfügung, um zeitliche Zusammenhänge auszudrücken.
+Während dies in $\PCTL$ aber nur mit diskreten Werten möglich ist, verwendet $\TCTL$ reelle Werte, wodurch sich Systeme potentiell besser beschreiben lassen.
+Da dies aber offensichtlich komplexer, als bloß bei jeder verwendeten Transition einen Zähler zu erhöhen, wird eine neue Struktur benötigt, welche Systeme modellieren soll und über welchen $\TCTL$-Formeln ausgewertet werden.
+Dafür definieren wir eine feste Menge $\mathcal{N}$, welche uns Werte für zeitliche Vergleiche in Formeln gibt.
+Der Einfachheit halber definieren wir hier $\mathcal{N}\coloneqq\{0,1,\dots\}=\mathbb{N}$, wegen $\vert\mathbb{N}\vert=\vert\mathbb{Q}\vert$ lässt sich aber natürlich auch $\mathcal{N}=\mathbb{Q}$ wählen. \cite{alur1990model}
+
+\begin{definition}[Zeitliche Graphen]
+	Ein \textit{zeitlicher Graph} ist ein Tupel $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ mit folgenden Definitionen \cite{alur1990model}:
+	\begin{itemize}
+		\item $S$ ist eine endliche Menge an Knoten.
+		\item $s_0\in S$ ist der Startzustand.
+		\item $E\subseteq S\times S$ ist die Kantenrelation.
+		\item $C$ ist eine endliche Menge an Uhren.
+		\item $\pi:E\to 2^C$ ist eine Abbildung, die jeder Kante eine Menge an Uhren zuweist.
+		\item $\tau$ ist eine Abbildung, die jeder Kante eine Formel zuweist, die aus Booleschen Junktoren über den atomaren Formeln $x\leq c$ und $c\leq x$ besteht, wobei $c\in C$ und $x\in \mathcal{N}$ gilt.
+		\item Für eine Menge an atomaren Aussagen $\mathsf{AP}$ ist $\mu:S\to 2^{\mathsf{AP}}$ eine Abbildung, die jedem Zustand eine Menge an atomaren Aussagen zuweist.
+	\end{itemize}
+	
+	Ein zeitlicher Graph besitzt also eine Menge an sogenannten Uhren $C$.
+	Diese zählen unabhängig voneinander hoch so, dass jede Uhr zu jedem \glqq Zeitpunkt\grqq{} einen reellen Wert $x\in \mathbb{R}_{\geq 0}$ speichert.
+	Mithilfe von $\pi$ lassen sich Uhren zurücksetzen, für jede Transition lässt sich also eine Menge an Uhren auswählen, welche mit dem Wechsel über die Transition zurückgesetzt werden.
+	Zusätzlich existiert für jede Kante eine Formel, welche bestimmte Voraussetzungen an die Transition stellt.
+\end{definition}
+
+Semantisch soll ein zeitlicher Graph so interpretiert werden, dass eine Kante $e\in E$ nur dann genommen werden kann, wenn $\tau(e)$ zum aktuellen Zeitpunkt erfüllt wird.
+Alle Uhren zählen gleich schnell hoch, können aber natürlich unterschiedliche Werte besitzen, da das Zurücksetzen unabhängig voneinander passieren kann.
+
+Um diese Definition besser zu verstehen, soll ein Beispiel angeführt werden.
+\begin{example}[Beispiel für einen zeitlichen Graphen]
+	Sei $\mathsf{AP}=\{\mathsf{running},\mathsf{stopped},\mathsf{warning},\mathsf{error}\}$ eine Menge an atomaren Aussagen und $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ ein zeitlicher Graph mit
+	\begin{itemize}
+		\item $S\coloneqq \{s_0,s_1,s_2\}$
+		\item $E\coloneqq\{(s_0,s_2),(s_1,s_0),(s_1,s_1),(s_1,s_2),(s_2,s_1)\}$
+		\item $C\coloneqq\{x,y\}$
+		\item $\pi(u,v) = \begin{cases}
+			\{x\} & \text{falls } v = s_2 \\
+			\{y\} & \text{falls } (u,v)=(s_1,s_0) \\
+			\emptyset & \text{sonst} \end{cases}$
+		\item $\tau(u,v) = \begin{cases}
+			\top & \text{falls } v = s_2 \\
+			x\geq 2 & \text{falls } u = s_2 \\
+			x \geq 3 & \text{sonst}
+		\end{cases}$
+		\item $\mu(s)=\begin{cases}
+			\{\mathsf{running}\} & \text{falls } s = s_0 \\
+			\{\mathsf{stopped},\mathsf{warning}\} & \text{falls } s = s_1 \\
+			\{\mathsf{stopped},\mathsf{error}\} & \text{falls } s = s_2
+		\end{cases}$
+	\end{itemize}
+	Dann lässt sich die graphische Darstellung von $\mathfrak{S}$ in Abbildung \ref{ZeitlicherGraph1} sehen\footnote{Die Formel $\top$ wird als Platzhalter für eine beliebige Tautologie wie zum Beispiel $x \geq 2 \lor \neg(x\geq 2)$ verwendet.}.
+	
+	Es lässt sich also sehen, dass die Uhr $x$ die Zeit stoppt, die seit dem letzten Fehler passiert ist, während die Uhr $y$ die Zeit misst, die seit der letzten Wiederaufnahme des Betriebs des Systems vergangen ist.
+	Weiter gibt $\tau$ uns die Information, dass wenn ein Fehler auftritt, für zwei Zeiteinheiten der Fehler bestehen bleiben muss und die darauf folgende Fehlermeldung für mindestens drei Zeiteinheiten seit dem Auftreten des Fehlers beibehalten wird.
+\end{example}
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[shorten >= 1pt, node distance=6cm, on grid]
+			\node[state, initial left, initial text={}, align=center] (s_0) [] {$s_0$ \\ $\{\mathsf{running}\}$};
+			\node[state, align=center] (s_1) [right=of s_0] {$s_1$ \\ $\{\mathsf{stopped},$\\$\mathsf{warning}\}$};
+			\node[state, align=center] (s_2) [below=of s_1] {$s_2$ \\ $\{\mathsf{stopped},$\\$\mathsf{error}\}$};
+			
+			\path[-stealth]
+			(s_0) edge [] node[align=center, left] {$\top$, \\ $\reset{x}$} (s_2)
+			
+			(s_1) edge [bend right] node[align=center, right] {$\top$, \\ $\reset{x}$} (s_2)
+			(s_1) edge [] node[align=center, above] {$x\geq 3$ \\ $\reset{y}$} (s_0)
+			
+			(s_2) edge [bend right] node[align=center, right] {$x\geq 2$} (s_1)
+			;
+		\end{tikzpicture}
+		
+		\caption{Die graphische Darstellung des zeitlichen Graphen $\mathfrak{S}$}
+		\label{ZeitlicherGraph1}
+	\end{center}
+\end{figure}
+
+Um nun $\TCTL$ zu definieren benötigen wir noch einige Begriffe und Strukturen.
+Für einen zeitlichen Graphen $\mathfrak{S}$ definiert $\Gamma(\mathfrak{S})$ die Menge aller möglichen Zuweisungen von Werten zu den Uhren, formal also $\Gamma(\mathfrak{S})\coloneqq \{\nu \, | \, \nu : C \to \mathbb{R}_{\geq 0}\}$.
+Weiter schreiben wir für ein $\nu\in \Gamma(\mathfrak{S})$ und ein $t\in \mathbb{R}_{\geq 0}$, den Ausdruck $\nu+t$ für eine neue Zuweisung definiert als $(\nu+t)(x) \coloneqq \nu(x)+t$ und für ein $x\in C$ definieren wir die Schreibweise $[x\mapsto t]\nu$ als 
+\[([x\mapsto t]\nu)(y)\coloneqq \begin{cases}
+	t & \text{falls } x=y \\
+	\nu(y) & \text{sonst}
+\end{cases}\]
+Eine interessante Beobachtung ist die, dass die eine Konfiguration eines zeitlichen Graphens ein Paar aus Zustand und Uhr-Belegungen sind.
+Der aktuelle Stand eines zeitlichen Graphens $\mathfrak{S}$ lässt sich also eindeutig durch das Paar $\langle s,\nu \rangle$ charakterisieren, wobei $s$ ein Zustand ist und $\nu\in \Gamma(\mathfrak{S})$ gilt. \cite{alur1990model}
+
+Damit können wir Läufe durch zeitliche Graphen definieren, welche stetige Zustandswechsel erlauben. 
+Es ist also möglich nicht nur zu diskreten Zeitpunkten einen Zustand zu wechseln, wodurch die in der Einleitung benannten Vorteile von $\TCTL$ verwendet werden können.
+
+\begin{definition}[$\langle s,\nu \rangle$-Lauf]
+	Sei $\langle s,\nu \rangle$ eine Konfiguration des zeitlichen Graphen $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$. Dann ist ein $\langle s,\nu \rangle$-Lauf eine unendliche Folge an Tripeln der Form 
+	$$(\langle s,\nu,0\rangle = \langle s_1,\nu_1,t_1\rangle,\langle s_2,\nu_2,t_2\rangle,\dots)\in (S\times \Gamma(\mathfrak{S})\times \mathbb{R}_{\geq 0})^\omega$$ 
+	so, dass folgende Regeln eingehalten werden \cite{alur1990model}:
+	\begin{enumerate}
+		\item $\text{Für alle } i\in \mathbb{N}\setminus\{0\}$ gilt $t_{i+1}>t_i$. Die Zeit-Werte steigen also streng monoton.
+		\item $\text{Für die Tripel } \langle s_i,\nu_i,t_i\rangle$ und $\langle s_{i+1},\nu_{i+1},t_{i+1}\rangle$ definieren wir $e_i=(s_i,s_{i+1})$ und es muss gelten $e_i\in E$.
+		\item $\text{Für alle } i\in \mathbb{N}\setminus \{0\}$ gilt $\nu_{i+1}=[\pi(e_i)\mapsto 0](\nu_i+t_{i+1}-t)$.
+		\item $\text{Für die boolesche Voraussetzung } \tau(e_i)$ ist $(\nu_i + t_{i+1}-t_i)$ eine erfüllende Belegung der Uhr-Werte.
+		\item $\text{Für jedes } t\in \mathbb{R}_{\geq 0}$ gibt es ein $j$ so, dass $t_j\geq t$. Es gibt also keine obere Schranke für die Zeit-Werte.
+	\end{enumerate}
+\end{definition}
+
+Nun können wir $\TCTL$ definieren.
+
+\begin{definition}[Syntax von $\TCTL$]
+	Sei $\mathsf{AP}$ eine Menge an atomaren Aussagen, $p\in \mathsf{AP}$ und $c\in \mathcal{N}$. Dann definieren die beiden folgenden Grammatiken die Logik $\TCTL$:
+	\begin{align*}
+		\varphi &\Coloneqq p \,|\, \varphi \land \varphi \,|\, \neg\varphi \,|\, \exists\varphi \operatorname{U}_{\kappa c}\varphi \,|\, \forall\varphi \operatorname{U}_{\kappa c}\varphi \\
+		\kappa &\Coloneqq \, < \,|\, \leq \,|\, = \,|\, \geq \,|\, >
+	\end{align*}
+	Die Menge der $\TCTL$-Formeln sind die Ausdrücke, die von $\varphi$ erzeugt werden. \cite{alur1990model}
+\end{definition}
+
+Informell soll für $\sim \in \{<,\leq,=\geq,>\}$, $\exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ bedeuten, dass es einen Präfix gibt, der $\sim c$ Zeiteinheiten lang ist und in dem $\varphi_1$ gilt, wobei im letzten Zustand des Präfixes $\varphi_2$ gelten muss.
+Die Bedeutung von $\forall\varphi_1 \operatorname{U}_{\sim c}\varphi_2$ ist analog.
+
+Schließlich können wir die Semantik von $\TCTL$ definieren.
+\begin{definition}[Semantik von $\TCTL$]
+	Sei $\mathfrak{S}=(S,s_0,E,C,\pi,\tau,\mu)$ ein zeitlicher Graph.
+	Dann können wir die Modellrelation $\models$ zwischen Konfigurationen von zeitlichen Graphen und $\TCTL$-Formeln induktiv definieren. Sei $s\in S$, $\nu\in \Gamma(\mathfrak{S})$, $p\in \mathsf{AP}$, $c\in \mathcal{N}$ und $\sim\in \{<,\leq,=,\geq,>\}$. \cite{alur1990model}
+	\begin{itemize}
+		\item $\langle s,\nu\rangle \models p\text{ gdw. }p\in \mu(s)$
+		\item $\langle s,\nu\rangle \models \varphi_1\land \varphi_2\text{ gdw. }s\models \varphi_1\text{ und }s\models \varphi_2$
+		\item $\langle s,\nu \rangle \models \neg\varphi\text{ gdw. }s\not\models\varphi$
+		\item $\langle s,\nu \rangle \models \exists\varphi_1 \operatorname{U}_{\sim c}\varphi_2\text{ gdw. es einen }\langle s,\nu\rangle$-Lauf gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und $s_j\models \varphi_1$ für $1\leq j < i$.
+		\item $\langle s,\nu \rangle\models \forall\varphi_1 \operatorname{U}_{\sim c}\varphi_2\text{ gdw. für alle }\langle s,\nu\rangle$-Läufe gilt, dass es ein $i\in \mathbb{N}$ gibt, mit $t_i \sim c$, $s_i\models \varphi_2$ und für alle $1\leq j < i$ gilt $s_j\models \varphi_1$.
+	\end{itemize}
+\end{definition}
+
+Damit können wir bestimmen, wann eine Konfiguration eine $\TCTL$-Formel erfüllt.
+\begin{example}[Beispiel für das Auswerten von $\TCTL$-Formeln]
+	Betrachte bspw. den zeitlichen Graphen aus Abbildung \ref{ZeitlicherGraph1} und die Formel 
+	$$\varphi\coloneqq \exists\mathsf{stopped}\operatorname{U}_{< 3} \mathsf{running},$$ die besagt, dass das Systems stoppt und in weniger als drei Zeiteinheiten in einen laufenden Zustand wechselt.
+	Sei $\nu$ eine zeitliche Belegung mit $\nu(x)=0$ und $\nu(y)\in \mathbb{R}_{\geq 0}$ beliebig.
+	Dann stellt die Konfiguration $\alpha = \langle s_2,\nu \rangle$ dar, dass gerade in den Zustand $s_2$ gewechselt wurde, wodurch die Uhr $x$ zurückgesetzt wurde.
+	Wenn wir nun $\alpha \models \varphi$ betrachten, dann fällt auf, dass der einzige Pfad zu einem Zustand mit $\mathsf{running}$ der Pfad $s_2, s_1,s_0$ ist. 
+	Weiter ist die Transition $(s_1,s_0)$ erst möglich, wenn $x\geq 3$ gilt.
+	Da wir unsere Auswertung mit $\nu_1(x)=0=t_1$ beginnen, ist $\nu_i(x)=t_i$ für alle $i\geq 1$.
+	Daraus ergibt sich aber auch, dass für alle $\langle s,\nu \rangle$-Läufe gilt, dass wenn $s_i = s_0$ gilt, $\nu_i(x)=t_i \geq 3$ gelten muss.
+	Es folgt also $\alpha \not\models \varphi$.
+\end{example}
+
+Wie man an diesem Beispiel erkennen konnte, ist das Auswerten von $\TCTL$-Formeln nicht trivial.
+Aus diesem Grund ist die algorithmische Betrachtung des Model-Checking Spiels für $\TCTL$ äußerst interessant und wird in \cite{alur1990model} sehr konkret besprochen.
+Der darin diskutierte Model-Checking Algorithmus hat dann eine Komplexität von 
+$$\mathcal{O}\left[c(\varphi)\cdot \vert\varphi\vert \cdot (|S|+|E|) \cdot |C|! \cdot \prod_{x\in C}c_x\right],$$ 
+wobei $c(\varphi)$ die größte in $\varphi$ vorkommende Konstante ist. \cite{alur1990model}
+
+Dies stellt eine sehr viel höhere Komplexität dar, als die in Kapitel \ref{ChapMCAlgs} vorgestellten Algorithmen.
+Zudem waren die $\PCTL$-Algorithmen nicht optimiert für $p\in \{0,1\}$, was hier ja aber der Fall ist.
+Offensichtlich ist die Art, wie $\PCTL$ Zeit implementiert sehr viel schwächer als $\TCTL$s Implementation, jedoch ist diese Steigerung an Aussagekraft auch sehr klar in der Model-Checking Komplexität erkennbar.
+Ein Ausweiten von $\TCTL$ bzw. zeitlichen Graphen auf Markov-Ketten würde zusätzliche Komplikationen hinzufügen.
+Wegen der Booleschen Ausdrücke aus $\tau$ wäre es nötig, für jedes $n\in \mathcal{N}$ ein eigenes $\mathcal{T}_n:S\times S\to [0,1]$ zu definieren.
+Durch geeignetes Bestimmen von Äquivalenzklassen lässt sich die Anzahl der benötigten Funktionen zwar in den meisten Fällen verringern, im Allgemeinen Fall wird aber mindestens die Platzkomplexität deutlich erhöht.
+
+Die Aussagekraft von $\TCTL$ ist im Vergleich aber um einiges höher.
+So lässt sich zum Beispiel Zeit genau so darstellen wie in $\PCTL$ indem eine Uhr $x$ verwendet wird, die bei jedem Zustandswechsel zurückgesetzt wird und indem wir $\tau(e)$ für alle $e$ neu definieren durch $\tau(e)\gets \tau(e) \land x\leq 1 \land 1\leq x$.
+Dadurch würde jede Transition nur bei $x=1$ genommen werden, wodurch das Verhalten, wie es $\PCTL$ bei Markov-Ketten voraussetzt implementiert wird.
+Offensichtlich lassen sich in $\TCTL$ aber auch weitere Verhalten darstellen.
+Bspw. wäre es möglich unterschiedliche Nachbarn zu definieren, abhängig davon, wie lange sich bereits im aktuellen Zustand aufgehalten wurde.
+
+Es lässt sich also erkennen, dass $\PCTL$ trotz der, bzgl. Zeit, geringeren Aussagekraft auch Vorteile gegenüber $\TCTL$ bietet.
+Falls es aber wichtig ist starke Aussagen über das zeitliche Verhalten eines Systems zu formulieren, wäre $\TCTL$ vermutlich die bessere Wahl.
+
+
+\subsection{Generalized-Probabilistic-Logic}
+
+Der \textit{modale $\mu$-Kalkül} ($\Lmu$) stellt eine sehr wichtige Fixpunktlogik für Korrektheitsverifikation dar.
+Das liegt daran, dass es möglich ist, die meisten für Model-Checking verwendeten Logiken in diese einzubetten. So lässt sich beispielsweise zu jeder $\CTL$- oder $\CTL^*$-Formel eine äquivalente $\Lmu$-Formel definieren.
+Zusätzlich lassen sich aber auch noch weitere Aussagen treffen, wie bspw. dass auf einem Pfad in jedem zweiten Zustand eine Bedingung gilt.
+Dies lässt sich weder in $\CTL$, noch $\CTL^*$ ausdrücken. \cite{cleaveland2005probabilistic}
+In diesem Kapitel wird die \textit{Generalized-Probabilistic-Logic} ($\GPL$) betrachtet, welche $\Lmu$ um Wahrscheinlichkeiten erweitert.
+
+Aus Platzgründen wird $\Lmu$ hier nicht explizit definiert, für Informationen wird aber auf \cite{stirling1991local}, \cite{kozen1983results} und \cite{emerson1991real} verwiesen.
+
+Bevor $\GPL$ definiert werden kann, müssen wir noch einige Strukturen und Funktionen betrachten.
+
+\begin{definition}[Reaktive-probabilistische-Transitionssysteme]
+	Sei $S$ eine abzählbare Menge an Zuständen, $\mathsf{Act}$ eine Menge an Aktionen und $\mathsf{AP}$ eine Menge an atomaren Aussagen.
+	Dann bezeichnen wir ein Tupel $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ als ein \textit{reaktives-probabilistisches-Transitionssystem} (RPLTS), wenn $\delta\subseteq S\times \mathsf{Act} \times S$ eine Übergangsrelation, $P:\delta\to (0,1]$ eine Transitions-Wahrscheinlichkeitsfunktion und $\mathcal{L}:S\to2^{\mathsf{AP}}$ eine Bezeichnungsfunktion ist.
+	Weiter muss für $P$ gelten, dass
+	\begin{enumerate}
+		\item $\text{Für alle }s\in S\text{ und alle }\alpha\in \mathsf{Act}$ gilt $\sum_{s' : (s,a,s')\in \delta} P(s,a,s')\in \{0,1\}$
+		\item $\text{Für alle }s\in S\text{ und alle }\alpha\in \mathsf{Act}$ gilt, wenn es ein $s'$ mit $(s,a,s')\in \delta \text{ gibt, dann ist}$ $\sum_{s' : (s,a,s')\in \delta} P(s,a,s') = 1$ \cite{cleaveland2005probabilistic}
+	\end{enumerate}
+\end{definition}
+
+Nun können wir Berechnungen von RPLTS als Abfolge von Zuständen der Form $\sigma = s_0\xrightarrow{a_1}s_1 \cdots \xrightarrow{a_n}s_n$ definieren mit der Voraussetzung, dass für $0\leq i <n$, $(s_i,a_{i+1},s_{i+1})\in \delta$.
+Weiter ist ein $\sigma'$ der Präfix eines $\sigma=s_0\xrightarrow{a_1} \cdots \xrightarrow{a_n}s_n$, wenn es ein $i\leq n$ gibt, mit $\sigma' = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_i}s_i$ und als Abkürzung schreiben wir $\mathcal{C}_\mathfrak{S}$ für alle Berechnungen im RPLTS $\mathfrak{S}$ und $\mathcal{C}_\mathfrak{S}(s)\coloneqq \{\sigma\in \mathcal{C}_\mathfrak{S} : s_0=s\}$. \cite{cleaveland2005probabilistic}
+
+Damit erhalten wir eine Definition von Bäumen.
+\begin{definition}[d-Bäume]
+	Sei $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ ein RPLTS und sei $T\subseteq \mathcal{C}_\mathfrak{S}$. Wir nennen $T$ einen \textit{d-Baum}, wenn $T$ folgende Bedingungen erfüllt \cite{cleaveland2005probabilistic}:
+	\begin{itemize}
+		\item $T$ ist abgeschlossen unter Präfixen, d.h. wenn $\sigma \in T$ und $\sigma'$ ist ein Präfix von $\sigma$, dann ist $\sigma'\in T$
+		\item $T$ ist deterministisch, d.h. wenn $\sigma,\sigma'\in T$ mit $\sigma = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_n}s_n\xrightarrow{a}s\cdots$ und $\sigma' = \sigma = s_0\xrightarrow{a_1}\cdots \xrightarrow{a_n}s_n\xrightarrow{a'}s'\cdots$, dann ist entweder $a\neq a'$ oder $s=s'$. Intuitiv bedeutet das, dass wenn zwei Berechnungspfade einen gemeinsamen Präfix haben, es entweder eine Stelle geben muss, an denen sich die verwendeten Aktionen unterscheiden oder es die gleichen Pfade sein müssen.
+		\item Es existiert ein $s\in S$ mit $T\subseteq \mathcal{C}_\mathfrak{S}(s)$. $s$ bezeichnen wir als Wurzel von $T$
+	\end{itemize}
+	Des weiteren nennen wir einen d-Baum $T$ \textit{maximal}, wenn es kein $T'$ mit $T\subseteq T'$ gibt und für ein RPLTS $\mathfrak{S}$ ist $\mathcal{M}_{\mathfrak{S}}$ die Menge aller maximalen d-Bäume, bzw. $\mathcal{M}_{\mathfrak{S}}(s)$ die Menge aller maximalen d-Bäume $T$ mit $T\subseteq \mathcal{C}_\mathfrak{S}(s)$. \cite{cleaveland2005probabilistic}
+\end{definition}
+
+Für eine Menge $B$ an d-Bäumen mit gemeinsamer Wurzel für den gilt, dass es einen Baum $T$ gibt so, dass für jedes $T'\in B$, $T\subseteq T'$ gilt, lässt sich ein Wahrscheinlichkeitsmaß $\mu_\mathfrak{S}$ definieren mit 
+$$
+\mu_\mathfrak{S}(T)\coloneqq \prod_{s_0\xrightarrow{a_1}\cdots \xrightarrow{a_i}s_i\xrightarrow{a_{i+1}}s_{i+1}\in T} P(s_i,a_{i+1},s_{i+1})
+$$
+Wie in \cite{cleaveland2005probabilistic} gezeigt, verhält sich dies dann wie ein Wahrscheinlichkeitsmaß.
+
+Mit diesem Maß haben wir die Werkzeuge, um die Erweiterung von $\Lmu$ zu definieren.
+\begin{definition}[Syntax von der $\GPL$]
+	Die generalized probabilistic logic ($\GPL$) lässt sich durch die folgenden Grammatiken definieren. Dabei ist $X$ eine Variable, $a\in \mathsf{Act}$ eine Aktion und $p\in [0,1]\subseteq \mathbb{R}$.
+	\begin{align*}
+		\Phi &\Coloneqq a \,|\, \neg a \,|\, \Phi \land \Phi \,|\, \Phi\lor \Phi\,|\, \mathsf{Pr}_{>p}\Psi \,|\, \mathsf{Pr}_{\geq p}\Psi \\
+		\Psi &\Coloneqq \Phi \,|\, X \,|\, \Psi\land\Psi \,|\, \Psi\lor \Psi \,|\, \langle a \rangle\Psi \,|\, [a]\Psi \,|\, \mu X.\Psi \,|\, \nu X.\Psi
+	\end{align*}
+	Wie auch bei $\Lmu$ werden keine freien Variablen erlaubt.
+	Auch ist eine Alternation von Fixpunktoperatoren nicht zulässig.
+	
+	Intuitiv sollen von $\Phi$ erzeugte Formeln Zustandsformeln darstellen und sind schlussendlich auch $\GPL$-Formeln. Die von $\Psi$ erzeugten Formeln sind fusselige Formeln.
+	Dementsprechend stellt $\Phi$ die Menge aller Zustands- und $\Psi$ die Menge aller fusseligen Formeln dar.
+\end{definition}
+
+Um die Formeln nun auszuwerten, müssen wir zwischen $\Phi$ und $\Psi$ unterscheiden.
+Das Ziel ist es, $\psi\in \Psi$ zu einem Wert in $[0,1]$ auszuwerten, um dann mithilfe des $\mathsf{Pr}$-Operators die Modelleigenschaft zu entscheiden.
+Daher wollen wir dafür das Wahrscheinlichkeitsmaß $\mu_\mathfrak{S}$ verwenden.
+Genauer wird mit der Funktion $\Theta_\mathfrak{S}:\Psi \to 2^{\mathcal{M}_\mathfrak{S}}$ jeder fusseligen Formel eine Menge an maximalen Bäumen über dem RPLTS zugeordnet, welche dann zu einem Wahrscheinlichkeitswert ausgewertet werden kann. \cite{cleaveland2005probabilistic}
+
+Diese Idee wollen wir nun formalisieren. Die Funktion $\Theta_\mathfrak{S}$ wird induktiv über den Formelaufbau definiert:
+\begin{itemize}
+	\item $\Theta_\mathfrak{S}(\varphi) = \bigcup_{s\models \varphi}\mathcal{M}_\mathfrak{S}$, wobei $\varphi\in \Phi$
+	\item $\Theta_\mathfrak{S}(\langle a\rangle \psi) = \{T\in \mathcal{M}_\mathfrak{S} : \exists T' : T\xrightarrow{a}T' \land T'\in \Theta_\mathfrak{S}(\psi)\}$, wobei $T\xrightarrow{a}T'$ bedeutet, dass es eine $a$-Transition von der Wurzel von $T$ zur Wurzel von $T'$ gibt
+	\item $\Theta_\mathfrak{S}([a]\psi) = \{T\in \mathcal{M}_\mathfrak{S} : (T\xrightarrow{a}T') \Rightarrow T'\in \Theta_\mathfrak{S}(\psi)\}$
+	\item $\Theta_\mathfrak{S}(\psi_1\land \psi_2) = \Theta_\mathfrak{S}(\psi_1)\cap \Theta_\mathfrak{S}(\psi_2)$
+	\item $\Theta_\mathfrak{S}(\psi_1\lor\psi_2) = \Theta_\mathfrak{S}(\psi_1) \cup \Theta_\mathfrak{S}(\psi_2)$
+	\item $\Theta_\mathfrak{S}(\mu X.\psi) = \bigcup_{i=0}^\infty M_i$, mit $M_0=\emptyset$ und $M_{i+1} = \Theta_\mathfrak{S}(\psi[X\mapsto M_i])$, wobei $\psi[X\mapsto M_i]$ die Formel $\psi$ ist, wo $X$ durch die monadische Relation $M_i$ ersetzt wird
+	\item $\Theta_\mathfrak{S}(\nu X.\psi) = \bigcap_{i+1}^\infty N_i$, mit $N_0=\mathcal{M}_\mathfrak{S}$ und $N_{i+1}=\Theta_\mathfrak{S}(\psi[X\mapsto N_i])$
+\end{itemize}
+Weiter können wir für ein $s\in S$ $\Theta_{\mathfrak{S},s}(\psi)\coloneqq \Theta_\mathfrak{S}\cap \mathcal{M}_\mathfrak{S}(s)$ definieren. \cite{cleaveland2005probabilistic}
+
+Mit dieser Funktion können wir nun die Semantik von $\GPL$ definieren.
+\begin{definition}[Semantik von $\GPL$]
+	Sei $\mathfrak{S}=(S,\delta,P,\mathcal{L})$ ein RPLTS und $a\in \mathsf{AP}$. Dann ist $\models_\mathfrak{S}\subseteq S\times \Phi$ induktiv definiert \cite{cleaveland2005probabilistic}:
+	\begin{itemize}
+		\item $s\models_\mathfrak{S} a\text{ gdw. }a\in \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \neg a\text{ gdw. }a\notin \mathcal{L}(s)$
+		\item $s\models_\mathfrak{S} \varphi_1\land\varphi_2\text{ gdw. }s\models_\mathfrak{S}\varphi_1\text{ und }s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \varphi_1\lor\varphi_2\text{ gdw. }s\models_\mathfrak{S}\varphi_1\text{ oder }s\models_\mathfrak{S}\varphi_2$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{>p}\psi\text{ gdw. }\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi))>p$
+		\item $s\models_\mathfrak{S} \mathsf{Pr}_{\geq p}\psi\text{ gdw. }\mu_\mathfrak{S}(\Theta_{\mathfrak{S},s}(\psi))\geq p$
+	\end{itemize}
+\end{definition}
+
+Damit haben wir $\GPL$ vollständig definiert und können die Logik an einem Beispiel betrachten.
+
+\begin{example}[Beispiel für $\GPL$]
+	Man betrachte den Graphen aus Abbildung \ref{RPLTS1}, welcher einen RPLTS darstellt. 
+	Als erstes Beispiel soll die fusselige Formel $\psi_1\coloneqq \mu X. \mathsf{stop} \lor \langle a\rangle X$ betrachtet werden, welche aussagt, dass es einen Pfad zu einem Knoten gibt, welcher mit $\mathsf{stop}$ annotiert ist.
+	Da $A$ der Startzustand ist, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_1) = \{A\xrightarrow{a}B\xrightarrow{a}C\}$ und damit dann $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) = \left(\frac{1}{3}\right)^2=\frac{1}{9}$.
+	
+	Als zweites wollen wir nun noch die Wahrscheinlichkeit bestimmen, in einem mit $\mathsf{error}$ annotierten Zustand zu enden. 
+	Nehmen wir dafür die analoge Formel $\psi_2\coloneqq \mu X.\mathsf{error}\lor \langle a \rangle X$.
+	Da die maximalen d-Bäume betrachtet werden, erhalten wir $\Theta_{\mathfrak{S},A}(\psi_2) = \{A\xrightarrow{a}D, A\xrightarrow{a}B\xrightarrow{a}D\}$ und daraus $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = \mu_\mathfrak{S}(A\xrightarrow{a}D) + \mu_\mathfrak{S}(A\xrightarrow{a}B\xrightarrow{a}D) = \frac{2}{3}+\frac{1}{3}\cdot\frac{2}{3}=\frac{8}{9}$.
+	
+	Es fällt also auf, dass $\mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_1)) + \mu_\mathfrak{S}(\Theta_{\mathfrak{S},A}(\psi_2)) = 1$.
+	Es gibt demnach nur die Möglichkeiten in einem $\mathsf{error}$- oder einem $\mathsf{stop}$-Zustand zu enden.
+\end{example}
+
+\begin{figure}[h]
+	\begin{center}
+		\begin{tikzpicture}[shorten >= 1pt, node distance=3cm, on grid, auto]
+			\node[state, initial left, initial text={}, align=center] (A) [] {$A$ \\ $\{\mathsf{start}\}$};
+			\node[state, align=center] (B) [right=of A] {$B$ \\ $\{\}$};
+			\node[state, align=center] (C) [right=of B] {$C$ \\ $\{\mathsf{stop}\}$};
+			\node[state, align=center] (D) [below=of B] {$D$ \\ $\{\mathsf{error}\}$};
+			
+			\path[-stealth]
+			(A) edge [] node[align=center,] {$a$, $\frac{1}{3}$} (B)
+			(B) edge [] node[align=center,] {$a$, $\frac{1}{3}$} (C)
+			
+			(A) edge [] node[align=center] {$a$, $\frac{2}{3}$} (D)
+			(B) edge [] node[align=center] {$a$, $\frac{2}{3}$} (D)
+			;
+		\end{tikzpicture}
+		
+		\caption{Die graphische Darstellung des RPLTS $\mathfrak{S}$}
+		\label{RPLTS1}
+	\end{center}
+\end{figure}
+
+Wir haben damit eine sehr interessante Logik kennengelernt.
+Zum Einen lassen sich einige sehr starke probabilistische Logiken wie bspw. $\mathsf{p}\text{-}\CTL^*$ darin einbetten \cite{cleaveland2005probabilistic}.
+Durch Wahl geeigneter Formeln wäre es demnach vermutlich auch möglich $\PCTL$ mit Voraussetzung $t=\infty$ in $\GPL$ einzubetten.
+Zum Anderen stellt die höhere Ausdruckskraft aber auch Nachteile dar.
+So ist das Auswerten sehr viel aufwendiger und auch der in \cite{cleaveland2005probabilistic} vorgestellte Model-Checking Algorithmus benötigt einige Schritte mehr als der für $\PCTL$.
+Wir befinden uns also in einer ähnlichen Situation wie bei $\TCTL$.
+Jedoch gibt es dennoch den Unterschied, dass $\GPL$ mit zeitlichen Aspekten wie $\PCTL$ erweitert werden könnte, da bloß das Zählen der verwendeten Kanten nötig ist.
+Dies ließe sich bspw. durch das Kontrollieren der Baumlänge durchführen.
+Eine solche Erweiterung um, wie $\PCTL$, sowohl über Zeit als auch Wahrscheinlichkeiten aussagen zu treffen scheint also um einiges realistischer als für $\TCTL$.
+
+$\GPL$ unterscheidet sich aber darin, dass der Mechanismus, wie Wahrscheinlichkeiten implementiert wurden, der gleiche ist, wie in $\PCTL$.
+So werten beide Logiken Pfade aus und erhalten einen Wahrscheinlichkeitswert.
+Da sich Formeln beider Logiken aber auf Zustände beziehen, wird ein Operator bereitgestellt welcher eine Schwelle für den Wahrscheinlichkeitswert darstellt.
+$\PCTL$ mit $t=\infty$ stellt über $\CTL$ also die selbe Erweiterung wie $\GPL$ über $\Lmu$ dar.
+
+
+
+
+
+
+
+
+
+
+
+
+
